@@ -1,26 +1,86 @@
-//
-//  ContentView.swift
-//  TimelineSwiftUI
-//
-//  Created by Chien Shing Ooi on 23/11/2023.
-//
-
 import SwiftUI
 
-struct ContentView: View {
+struct TimePill: Identifiable {
+    let id = UUID()
+    var name: String
+    var startWeek: Int
+    var duration: Int
+    var color: Color
+    var row: Int
+}
+
+struct TimelineView: View {
+    let timePills: [TimePill] = [
+        TimePill(name: "Pill that do something at Week 1-3", startWeek: 1, duration: 3, color: .black, row: 0),
+        TimePill(name: "Pill that do something at Week 5-6", startWeek: 5, duration: 2, color: .green, row: 1),
+        TimePill(name: "Pill that do something at Week 10-13", startWeek: 10, duration: 4, color: .blue, row: 2),
+        TimePill(name: "Pill that do something at Week 15-19", startWeek: 15, duration: 5, color: .yellow, row: 0),
+        TimePill(name: "Pill that do something at Week 20-22", startWeek: 20, duration: 3, color: .purple, row: 1)
+    ]
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        GeometryReader { geometry in
+            ScrollView(.horizontal, showsIndicators: false) {
+                VStack(alignment: .leading) {
+                    ForEach(0..<maxRow(in: timePills), id: \.self) { row in
+                        HStack(spacing: 1) {
+                            ForEach(0..<42, id: \.self) { week in
+                                ZStack {
+                                    // The week background (can be empty or styled)
+                                    Rectangle()
+                                        .fill(Color.red.opacity(0.2))
+                                        .frame(width: weekWidth(geometry.size.width), height: 30)
+                                    // Overlay TimePill if it exists for this week and row
+                                    if let pill = timePillForRowAndWeek(row: row, week: week) {
+                                        Rectangle()
+                                        .fill(pill.color)
+                                        .frame(width: CGFloat(pill.duration) * weekWidth(geometry.size.width),
+                                               height: 30)
+                                        Text(pill.name)
+                                        .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        .padding()
+
+    }
+
+    func weekWidth(_ screenWidth: CGFloat) -> CGFloat {
+        // Calculate the width for each week column
+        screenWidth / 3
+    }
+
+    func maxRow(in timePills: [TimePill]) -> Int {
+        // Determine the maximum row number needed
+        timePills.count
+    }
+
+    func timePillForRowAndWeek(row: Int, week: Int) -> TimePill? {
+        // Find the TimePill for a specific row and week, if it exists
+        timePills.first { pill in
+            pill.row == row && pill.startWeek == week
+        }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct PillView: View {
+    var pill: TimePill
+    var totalWidth: CGFloat
+
+    var body: some View {
+        Text(pill.name)
+            .frame(maxWidth: .infinity, maxHeight: 30)
+            .background(pill.color)
+            .cornerRadius(15)
+    }
+}
+
+struct TimelineView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        TimelineView()
     }
 }
