@@ -24,7 +24,7 @@ struct TimelineView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     VStack(alignment: .leading) {
                         ForEach(0..<20, id: \.self) { row in
-                            HStack(spacing: 1) {
+                            HStack(alignment: .top, spacing: 1) {
                                 ForEach(0..<42, id: \.self) { week in
                                     ZStack(alignment: .center) {
                                         // The week background (can be empty or styled)
