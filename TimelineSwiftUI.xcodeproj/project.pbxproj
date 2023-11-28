@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F80521F2B15C12D00EA1A1F /* TimelineCodables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F80521C2B15C12D00EA1A1F /* TimelineCodables.swift */; };
+		7F8052202B15C12D00EA1A1F /* Timeline.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F80521D2B15C12D00EA1A1F /* Timeline.json */; };
+		7F8052212B15C12D00EA1A1F /* TimelineHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */; };
 		FF3BA9692B0F42820038E76D /* TimelineSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */; };
 		FF3BA96B2B0F42820038E76D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA96A2B0F42820038E76D /* ContentView.swift */; };
 		FF3BA96D2B0F42830038E76D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF3BA96C2B0F42830038E76D /* Assets.xcassets */; };
@@ -14,6 +17,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F80521C2B15C12D00EA1A1F /* TimelineCodables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineCodables.swift; sourceTree = "<group>"; };
+		7F80521D2B15C12D00EA1A1F /* Timeline.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Timeline.json; sourceTree = "<group>"; };
+		7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineHelper.swift; sourceTree = "<group>"; };
 		FF3BA9652B0F42820038E76D /* TimelineSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimelineSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineSwiftUIApp.swift; sourceTree = "<group>"; };
 		FF3BA96A2B0F42820038E76D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -51,6 +57,9 @@
 		FF3BA9672B0F42820038E76D /* TimelineSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				7F80521D2B15C12D00EA1A1F /* Timeline.json */,
+				7F80521C2B15C12D00EA1A1F /* TimelineCodables.swift */,
+				7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */,
 				FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */,
 				FF3BA96A2B0F42820038E76D /* ContentView.swift */,
 				FF3BA96C2B0F42830038E76D /* Assets.xcassets */,
@@ -127,6 +136,7 @@
 			files = (
 				FF3BA9702B0F42830038E76D /* Preview Assets.xcassets in Resources */,
 				FF3BA96D2B0F42830038E76D /* Assets.xcassets in Resources */,
+				7F8052202B15C12D00EA1A1F /* Timeline.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +148,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF3BA96B2B0F42820038E76D /* ContentView.swift in Sources */,
+				7F80521F2B15C12D00EA1A1F /* TimelineCodables.swift in Sources */,
+				7F8052212B15C12D00EA1A1F /* TimelineHelper.swift in Sources */,
 				FF3BA9692B0F42820038E76D /* TimelineSwiftUIApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

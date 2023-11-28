@@ -1,23 +1,7 @@
 import SwiftUI
 
-struct TimePill: Identifiable {
-    let id = UUID()
-    var name: String
-    var startWeek: Int
-    var duration: Int
-    var color: Color
-    var row: Int
-}
-
 struct TimelineView: View {
-    let timePills: [TimePill] = [
-        TimePill(name: "Pill that do something at Week 1-3", startWeek: 1, duration: 3, color: .black, row: 0),
-        TimePill(name: "Pill that do something at Week 5-6", startWeek: 5, duration: 2, color: .green, row: 1),
-        TimePill(name: "Pill that do something at Week 10-13", startWeek: 10, duration: 4, color: .blue, row: 2),
-        TimePill(name: "Pill that do something at Week 15-19", startWeek: 15, duration: 5, color: .yellow, row: 0),
-        TimePill(name: "Pill that do something at Week 20-22", startWeek: 20, duration: 3, color: .purple, row: 1)
-    ]
-
+    let timePills: [TimelinePill] = TimelineHelper().sort()
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
@@ -33,10 +17,10 @@ struct TimelineView: View {
                                     // Overlay TimePill if it exists for this week and row
                                     if let pill = timePillForRowAndWeek(row: row, week: week) {
                                         Rectangle()
-                                        .fill(pill.color)
-                                        .frame(width: CGFloat(pill.duration) * weekWidth(geometry.size.width),
+                                            .fill(Color(pill.color ?? UIColor.red))
+                                            .frame(width: CGFloat(pill.duration ?? 0) * weekWidth(geometry.size.width),
                                                height: 30)
-                                        Text(pill.name)
+                                        Text(pill.body ?? "ttiel")
                                         .foregroundColor(.white)
                                     }
                                 }
@@ -54,27 +38,27 @@ struct TimelineView: View {
         screenWidth / 3
     }
 
-    func maxRow(in timePills: [TimePill]) -> Int {
+    func maxRow(in timePills: [TimelinePill]) -> Int {
         // Determine the maximum row number needed
         timePills.count
     }
 
-    func timePillForRowAndWeek(row: Int, week: Int) -> TimePill? {
+    func timePillForRowAndWeek(row: Int, week: Int) -> TimelinePill? {
         // Find the TimePill for a specific row and week, if it exists
         timePills.first { pill in
-            pill.row == row && pill.startWeek == week
+            pill.row == row && pill.startDay == week // TBD: this needs to be adjusted
         }
     }
 }
 
 struct PillView: View {
-    var pill: TimePill
+    var pill: TimelinePill
     var totalWidth: CGFloat
 
     var body: some View {
-        Text(pill.name)
+        Text(pill.body ?? "body")
             .frame(maxWidth: .infinity, maxHeight: 30)
-            .background(pill.color)
+            .background(Color(pill.color ?? UIColor.red))
             .cornerRadius(15)
     }
 }
