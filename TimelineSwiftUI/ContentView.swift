@@ -11,33 +11,41 @@ struct TimePill: Identifiable {
 
 struct TimelineView: View {
     let timePills: [TimePill] = [
-        TimePill(name: "Pill that do something at Week 1-3", startWeek: 1, duration: 3, color: .black, row: 0),
-        TimePill(name: "Pill that do something at Week 5-6", startWeek: 5, duration: 2, color: .green, row: 1),
-        TimePill(name: "Pill that do something at Week 10-13", startWeek: 10, duration: 4, color: .blue, row: 2),
+        TimePill(name: "Pill that do something at Week 1-3 Pill that do something at Week 1-3 Pill that do something at Week 1-3", startWeek: 1, duration: 3, color: .black, row: 0),
+        TimePill(name: "Pill that do something at Week 6-7", startWeek: 5, duration: 2, color: .green, row: 1),
+        TimePill(name: "Pill that do something at Week 11-13", startWeek: 10, duration: 4, color: .blue, row: 2),
         TimePill(name: "Pill that do something at Week 15-19", startWeek: 15, duration: 5, color: .yellow, row: 0),
         TimePill(name: "Pill that do something at Week 20-22", startWeek: 20, duration: 3, color: .purple, row: 1)
     ]
 
     var body: some View {
         GeometryReader { geometry in
-            ScrollView(.horizontal, showsIndicators: false) {
-                VStack(alignment: .leading) {
-                    ForEach(0..<maxRow(in: timePills), id: \.self) { row in
-                        HStack(spacing: 1) {
-                            ForEach(0..<42, id: \.self) { week in
-                                ZStack {
-                                    // The week background (can be empty or styled)
-                                    Rectangle()
-                                        .fill(Color.red.opacity(0.2))
-                                        .frame(width: weekWidth(geometry.size.width), height: 30)
-                                    // Overlay TimePill if it exists for this week and row
-                                    if let pill = timePillForRowAndWeek(row: row, week: week) {
+            ScrollView(.vertical, showsIndicators: false) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    VStack(alignment: .leading) {
+                        ForEach(0..<20, id: \.self) { row in
+                            HStack(spacing: 1) {
+                                ForEach(0..<42, id: \.self) { week in
+                                    ZStack(alignment: .center) {
+                                        // The week background (can be empty or styled)
                                         Rectangle()
-                                        .fill(pill.color)
-                                        .frame(width: CGFloat(pill.duration) * weekWidth(geometry.size.width),
-                                               height: 30)
-                                        Text(pill.name)
-                                        .foregroundColor(.white)
+                                            .fill(Color.red.opacity(0.2))
+                                            .frame(width: weekWidth(geometry.size.width), height: 30)
+                                            .padding(.zero)
+                                        // Overlay TimePill if it exists for this week and row
+                                        if let pill = timePillForRowAndWeek(row: row, week: week) {
+                                            Rectangle()
+                                                .fill(pill.color)
+                                                .frame(width: CGFloat(pill.duration) * weekWidth(geometry.size.width))
+                                                .padding(.zero)
+                                            Text(pill.name)
+                                                .font(.headline)
+                                                .padding(.horizontal, 20.0)
+                                                .foregroundColor(.white)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .frame(width: CGFloat(pill.duration) * weekWidth(geometry.size.width))
+                                                .padding(.vertical, 20.0)
+                                        }
                                     }
                                 }
                             }
