@@ -16,7 +16,7 @@ public enum Categories:String {
     var color: UIColor {
             switch self {
             case .welcome:
-                return .yellow //
+                return .cyan //
             case .pregnancyMilestones:
                 return .lightGray
             case .babysDevelopment:
@@ -49,9 +49,8 @@ class TimelineHelper: NSObject {
            return nil
     }
     
-    func sort() -> [TimelinePill] {
-        guard let timeline = loadTimelineValues(),
-                let timelineCards = timeline.timeline else {
+    func sort(timeline: Timeline) -> [TimelinePill] {
+        guard let timelineCards = timeline.timeline else {
             return []
         }
         let filteredArray = timelineCards.sorted {
@@ -76,4 +75,44 @@ class TimelineHelper: NSObject {
         let pri = priority.firstIndex{ $0 == categ}
         return pri ?? 100
     }
+    
 }
+
+extension TimelineHelper {
+    static func determineRow(for targetPill: TimelinePill, in pills: [TimelinePill], withPriority priorityCategories: [String]) -> Int {
+        var occupiedRowsByWeek: [Int: Int] = [:]
+
+        for pill in pills where pill.id != targetPill.id {
+            guard let startDay = pill.startDay, let duration = pill.duration else { continue }
+            let endDay = startDay + duration
+            for day in startDay..<endDay {
+                if let occupiedRow = occupiedRowsByWeek[day], hasHigherPriority(pill1: pill, pill2: targetPill, withPriority: priorityCategories) {
+                    occupiedRowsByWeek[day] = occupiedRow + 1
+                } else {
+                    occupiedRowsByWeek[day] = 1
+                }
+            }
+        }
+
+        guard let targetStartDay = targetPill.startDay, let targetDuration = targetPill.duration else { return 0 }
+        let targetEndDay = targetStartDay + targetDuration
+        var targetRow = 0
+        for day in targetStartDay..<targetEndDay {
+            if let occupiedRow = occupiedRowsByWeek[day] {
+                targetRow = max(targetRow, occupiedRow)
+            }
+        }
+
+        return targetRow
+    }
+
+    private static func hasHigherPriority(pill1: TimelinePill, pill2: TimelinePill, withPriority priorityCategories: [String]) -> Bool {
+        guard let category1 = pill1.category, let category2 = pill2.category,
+              let index1 = priorityCategories.firstIndex(of: category1),
+              let index2 = priorityCategories.firstIndex(of: category2) else {
+            return false
+        }
+        return index1 < index2
+    }
+}
+

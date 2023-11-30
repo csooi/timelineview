@@ -1,27 +1,31 @@
 import SwiftUI
 
 struct TimelineView: View {
-    let timePills: [TimelinePill] = TimelineHelper().sort()
+    @ObservedObject var viewModel: TimelineViewModel
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
                 VStack(alignment: .leading) {
-                    ForEach(0..<maxRow(in: timePills), id: \.self) { row in
-                        HStack(spacing: 1) {
+                    ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
+                        HStack(alignment: .top, spacing: 1) {
                             ForEach(0..<42, id: \.self) { week in
-                                ZStack {
+                                ZStack(alignment: .center) {
                                     // The week background (can be empty or styled)
                                     Rectangle()
                                         .fill(Color.red.opacity(0.2))
                                         .frame(width: weekWidth(geometry.size.width), height: 30)
                                     // Overlay TimePill if it exists for this week and row
-                                    if let pill = timePillForRowAndWeek(row: row, week: week) {
+                                    if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
                                         Rectangle()
                                             .fill(Color(pill.color ?? UIColor.red))
-                                            .frame(width: CGFloat(pill.duration ?? 0) * weekWidth(geometry.size.width),
-                                               height: 30)
-                                        Text(pill.body ?? "ttiel")
-                                        .foregroundColor(.white)
+                                            .frame(width: CGFloat(pill.duration ?? 0) * weekWidth(geometry.size.width))
+                                        Text((pill.body ?? "ttiel") + " \(pill.duration ?? 0)" )
+                                            .font(.system(size: 20.0, weight: .bold))
+                                            .padding(.horizontal, 20.0)
+                                            .foregroundColor(.white)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .frame(width: CGFloat(pill.duration ?? 0) * weekWidth(geometry.size.width))
+                                            .padding(.vertical, 20.0)
                                     }
                                 }
                             }
@@ -42,13 +46,6 @@ struct TimelineView: View {
         // Determine the maximum row number needed
         timePills.count
     }
-
-    func timePillForRowAndWeek(row: Int, week: Int) -> TimelinePill? {
-        // Find the TimePill for a specific row and week, if it exists
-        timePills.first { pill in
-            pill.row == row && pill.startDay == week // TBD: this needs to be adjusted
-        }
-    }
 }
 
 struct PillView: View {
@@ -57,7 +54,7 @@ struct PillView: View {
 
     var body: some View {
         Text(pill.body ?? "body")
-            .frame(maxWidth: .infinity, maxHeight: 30)
+//            .frame(maxWidth: .infinity, maxHeight: 30)
             .background(Color(pill.color ?? UIColor.red))
             .cornerRadius(15)
     }
@@ -65,6 +62,6 @@ struct PillView: View {
 
 struct TimelineView_Previews: PreviewProvider {
     static var previews: some View {
-        TimelineView()
+        TimelineView(viewModel: TimelineViewModel())
     }
 }
