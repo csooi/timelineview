@@ -12,20 +12,25 @@ struct TimelineView: View {
                                 ZStack(alignment: .center) {
                                     // The week background (can be empty or styled)
                                     Rectangle()
-                                        .fill(Color.red.opacity(0.2))
+                                        .fill(Color.clear)
                                         .frame(width: weekWidth(geometry.size.width), height: 30)
                                     // Overlay TimePill if it exists for this week and row
                                     if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
-                                        Rectangle()
-                                            .fill(Color(pill.color ?? UIColor.red))
-                                            .frame(width: CGFloat(pill.duration ?? 0) * weekWidth(geometry.size.width))
-                                        Text((pill.body ?? "ttiel") + " \(pill.duration ?? 0)" )
-                                            .font(.system(size: 20.0, weight: .bold))
-                                            .padding(.horizontal, 20.0)
-                                            .foregroundColor(.white)
-                                            .fixedSize(horizontal: false, vertical: true)
-                                            .frame(width: CGFloat(pill.duration ?? 0) * weekWidth(geometry.size.width))
-                                            .padding(.vertical, 20.0)
+                                            Rectangle()
+                                                .fill(Color(pill.color ?? UIColor.red))
+                                                .cornerRadius(10)
+                                                .frame(width: CGFloat(pill.duration ?? 0)/7.0 * weekWidth(geometry.size.width))
+                                                .onTapGesture {
+                                                    print("Tapped")
+                                                }
+                                            Text(pill.body ?? "ttiel")
+                                                .font(.system(size: 20.0, weight: .bold))
+                                                .padding(.horizontal, 10.0)
+                                                .foregroundColor(.white)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .frame(width: CGFloat(pill.duration ?? 0)/7.0 * weekWidth(geometry.size.width))
+                                                .padding(.vertical, 20.0)
+                                                .lineLimit(3)
                                     }
                                 }
                             }
@@ -45,18 +50,6 @@ struct TimelineView: View {
     func maxRow(in timePills: [TimelinePill]) -> Int {
         // Determine the maximum row number needed
         timePills.count
-    }
-}
-
-struct PillView: View {
-    var pill: TimelinePill
-    var totalWidth: CGFloat
-
-    var body: some View {
-        Text(pill.body ?? "body")
-//            .frame(maxWidth: .infinity, maxHeight: 30)
-            .background(Color(pill.color ?? UIColor.red))
-            .cornerRadius(15)
     }
 }
 

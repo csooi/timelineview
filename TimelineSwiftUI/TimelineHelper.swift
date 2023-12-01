@@ -79,40 +79,57 @@ class TimelineHelper: NSObject {
 }
 
 extension TimelineHelper {
+    
     static func determineRow(for targetPill: TimelinePill, in pills: [TimelinePill], withPriority priorityCategories: [String]) -> Int {
-        var occupiedRowsByWeek: [Int: Int] = [:]
+        // Mapping of week number to rows occupied in that week
+        var occupiedRowsByWeek: [Int: [Int]] = [:]
 
-        for pill in pills where pill.id != targetPill.id {
-            guard let startDay = pill.startDay, let duration = pill.duration else { continue }
-            let endDay = startDay + duration
-            for day in startDay..<endDay {
-                if let occupiedRow = occupiedRowsByWeek[day], hasHigherPriority(pill1: pill, pill2: targetPill, withPriority: priorityCategories) {
-                    occupiedRowsByWeek[day] = occupiedRow + 1
-                } else {
-                    occupiedRowsByWeek[day] = 1
+        // Sort all pills including the target pill by priority
+        let sortedPills = (pills + [targetPill]).sorted(by: {
+            priorityIndex(for: $0.category, priorityCategories: priorityCategories) <
+            priorityIndex(for: $1.category, priorityCategories: priorityCategories)
+        })
+
+        for pill in sortedPills {
+            guard let startWeek = weekNumber(for: pill.startDay),
+                  let endWeek = weekNumber(for: (pill.startDay ?? 0) + (pill.duration ?? 0)) else {
+                continue
+            }
+
+            if pill.id == targetPill.id {
+                // Find the lowest unoccupied row for the target pill
+                var targetRow = 0
+                for week in startWeek..<endWeek {
+                    targetRow = max(targetRow, findNextAvailableRow(in: occupiedRowsByWeek, forWeek: week))
+                }
+                return targetRow
+            } else {
+                // Populate occupied rows for other pills
+                let row = findNextAvailableRow(in: occupiedRowsByWeek, forWeek: startWeek)
+                for week in startWeek..<endWeek {
+                    occupiedRowsByWeek[week, default: []].append(row)
                 }
             }
         }
-
-        guard let targetStartDay = targetPill.startDay, let targetDuration = targetPill.duration else { return 0 }
-        let targetEndDay = targetStartDay + targetDuration
-        var targetRow = 0
-        for day in targetStartDay..<targetEndDay {
-            if let occupiedRow = occupiedRowsByWeek[day] {
-                targetRow = max(targetRow, occupiedRow)
-            }
-        }
-
-        return targetRow
+        return 0
     }
 
-    private static func hasHigherPriority(pill1: TimelinePill, pill2: TimelinePill, withPriority priorityCategories: [String]) -> Bool {
-        guard let category1 = pill1.category, let category2 = pill2.category,
-              let index1 = priorityCategories.firstIndex(of: category1),
-              let index2 = priorityCategories.firstIndex(of: category2) else {
-            return false
+    private static func weekNumber(for day: Int?) -> Int? {
+        guard let day = day else { return nil }
+        return (day - 1) / 7
+    }
+
+    private static func findNextAvailableRow(in occupiedRowsByWeek: [Int: [Int]], forWeek week: Int) -> Int {
+        let occupiedRows = occupiedRowsByWeek[week, default: []]
+        var row = 0
+        while occupiedRows.contains(row) {
+            row += 1
         }
-        return index1 < index2
+        return row
+    }
+
+    private static func priorityIndex(for category: String?, priorityCategories: [String]) -> Int {
+        guard let category = category else { return priorityCategories.count }
+        return priorityCategories.firstIndex(of: category) ?? priorityCategories.count
     }
 }
-

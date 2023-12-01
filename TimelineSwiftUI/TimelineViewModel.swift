@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 
 class TimelineViewModel: ObservableObject {
-    var timePills: [TimelinePill] = []
+    @Published var timePills: [TimelinePill] = []
     var priorityCategories: [String] = []
     private var pillRowMapping: [UUID: Int] = [:]
 
@@ -24,17 +24,22 @@ class TimelineViewModel: ObservableObject {
         for pill in pills {
             let row = TimelineHelper.determineRow(for: pill, in: pills, withPriority: priorityCategories)
             pillRowMapping[pill.id] = row
+            print("Pill \(pill.body ?? "") assigned to row \(row)")
         }
     }
+
 
     func timePillForRowAndWeek(row: Int, week: Int) -> TimelinePill? {
         timePills.first { pill in
-            guard let pillRow = pillRowMapping[pill.id], let startDay = pill.startDay, let duration = pill.duration else {
+            guard let pillRow = pillRowMapping[pill.id],
+                  let startDay = pill.startDay else {
                 return false
             }
 
-            let endDay = startDay + duration
-            return pillRow == row && (week >= startDay && week < endDay)
+            let pillWeek = (startDay) / 7 // Calculate the week number
+            return pillRow == row && pillWeek == week
         }
     }
+
+
 }

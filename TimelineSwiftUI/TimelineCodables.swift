@@ -40,22 +40,6 @@ class TimelinePill: Codable, Identifiable {
         let cate = Categories(rawValue: category)
         return cate?.color
     }
-    var row: Int? {
-        
-        //this is tempcode
-        guard let startDay = startDay else {
-            return 10
-        }
-        if startDay == 1 {
-            return 1
-        } else if startDay > 1 && startDay < 50 {
-            return 5
-        } else if startDay > 60 && startDay < 100 {
-            return 6
-        } else {
-            return 10
-        }
-    }
 
     enum CodingKeys: String, CodingKey {
         case category = "Category"
