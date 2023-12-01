@@ -3,38 +3,39 @@
 import UIKit
 
 class Timeline: Codable {
-    var priorityOfCategories: [String]?
-    var timeline: [TimelinePill]?
-    
+    var categoryMetaData: [CategoryMetadata]?
+    var timelinePills: [TimelinePill]?
+
     enum CodingKeys: String, CodingKey {
         case timeline = "Timeline"
-        case priorityOfCategories = "PriorityOfCategories"
+        case categoryMetaData = "CategoryMetadata"
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        priorityOfCategories = try container.decodeIfPresent([String].self,
-                                                             forKey: .priorityOfCategories)
-        timeline = try container.decodeIfPresent([TimelinePill].self,
+        categoryMetaData = try container.decodeIfPresent([CategoryMetadata].self,
+                                                             forKey: .categoryMetaData)
+        timelinePills = try container.decodeIfPresent([TimelinePill].self,
                                                  forKey: .timeline)
-        
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(timeline, forKey: .timeline)
-        try container.encodeIfPresent(priorityOfCategories, forKey: .priorityOfCategories)
+        try container.encodeIfPresent(timelinePills, forKey: .timeline)
+        try container.encodeIfPresent(categoryMetaData, forKey: .categoryMetaData)
     }
 }
 
 class TimelinePill: Codable, Identifiable {
     let id = UUID()
-    var category: String?
+    var categoryId: String?
     var body: String?
     var startDay: Int?
     var duration: Int?
+    var priority: Int?
+
     var color: UIColor? {
-        guard let category = category else {
+        guard let category = categoryId else {
             return nil
         }
         let cate = Categories(rawValue: category)
@@ -42,7 +43,7 @@ class TimelinePill: Codable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case category = "Category"
+        case categoryId = "CategoryId"
         case body = "Body"
         case startDay = "StartDay"
         case duration = "Duration"
@@ -50,7 +51,7 @@ class TimelinePill: Codable, Identifiable {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        category = try container.decodeIfPresent(String.self, forKey: .category)
+        categoryId = try container.decodeIfPresent(String.self, forKey: .categoryId)
         body = try container.decodeIfPresent(String.self, forKey: .body)
         startDay = try container.decodeIfPresent(Int.self, forKey: .startDay)
         duration = try container.decodeIfPresent(Int.self, forKey: .duration)
@@ -58,9 +59,29 @@ class TimelinePill: Codable, Identifiable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(category, forKey: .category)
+        try container.encodeIfPresent(categoryId, forKey: .categoryId)
         try container.encodeIfPresent(body, forKey: .body)
         try container.encodeIfPresent(startDay, forKey: .startDay)
         try container.encodeIfPresent(duration, forKey: .duration)
+    }
+}
+
+struct CategoryMetadata: Codable {
+    var id: String?
+    var localized: String?
+    var categoryColors: CategoryColors?
+    enum CodingKeys: String, CodingKey {
+        case id = "CategoryId"
+        case localized = "Localised"
+        case categoryColors = "CategoryColors"
+    }
+}
+
+struct CategoryColors: Codable {
+    var gradientType: String?
+    var codes: [String]?
+    enum CodingKeys: String, CodingKey {
+        case gradientType = "GradientType"
+        case codes = "Codes"
     }
 }

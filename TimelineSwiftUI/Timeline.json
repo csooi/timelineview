@@ -1,231 +1,284 @@
 {
-    "PriorityOfCategories": [
-        "Welcome",
-        "Pregnancy milestones",
-        "Your baby's development",
-        "Your healthcare",
-        "Daily habits",
-        "Things to prepare"
-      ],
-    "Timeline": [
-        {
-            "Category": "Welcome",
-            "Body": "Welcome to your Timeline 👋",
-            "StartDay": 1,
-            "Duration": 7
-        },
-        {
-            "Category": "Daily habits",
-            "Body": "Folic acid supplement recommended",
-            "StartDay": 1,
-            "Duration": 77
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Last period",
-            "StartDay": 1,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=28fddbada1aae9bcf6d2c24f26f6cf0a"
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Ovulation",
-            "StartDay": 7,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=94bb61190618d545c62bea5d6ea99280"
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Conception",
-            "StartDay": 7,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=fe3242cf53055ef96f038a251e29accd"
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Implantation",
-            "StartDay": 14,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=a0a96c92ae08e7b55f2855456048839e"
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Positive pregnancy test! ",
-            "StartDay": 21,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=ac480c58d1c0dfa2b8424788f9e2fb66"
-        },
-        {
-            "Category": "Your healthcare",
-            "Body": "Self-refer to your healthcare provider",
-            "StartDay": 21,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=4d00e595a5851d45ae283d1bab38286f"
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "Your baby's heart starts beating 💓",
-            "StartDay": 28,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=f984b2277658b4f7649874656910c7c2"
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "Your baby's vital organs are mostly formed ",
-            "StartDay": 63,
-            "Duration": 7
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "Growth measurements change 📏",
-            "StartDay": 91,
-            "Duration": 7
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "By now, your baby has fingerprints 🖐",
-            "StartDay": 112,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=4892a619ab8d4277c60785e5923ab59d"
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Research antenatal classes",
-            "StartDay": 133,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=ad9200bf92aad30a4bff4fd8f570be8a"
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Learn about the signs of pre-eclampsia",
-            "StartDay": 133,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=68c7effb0c2058b8cec00f74bac27df5"
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "You're halfway there! 🥳",
-            "StartDay": 133,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=041a49e323bdd9f945145523ddecf62b"
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "Your baby can now respond to sound 🎶",
-            "StartDay": 154,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=bd5306149e3a5eb46162d7c9c17fe592"
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "You may feel your baby hiccuping",
-            "StartDay": 168,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=b281860cb1f9b1204bee391626c2ba72"
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Start learning about feeding",
-            "StartDay": 203,
-            "Duration": 7
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Start learning about postnatal recovery ",
-            "StartDay": 217,
-            "Duration": 7
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Start learning about the fourth trimester 🤱",
-            "StartDay": 231,
-            "Duration": 7
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Learn about the signs of labour",
-            "StartDay": 245,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=aca5e186522a6fe396244853a4dc4758"
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Full term! 🗓",
-            "StartDay": 252,
-            "Duration": 7
-        },
-        {
-            "Category": "Pregnancy milestones",
-            "Body": "Your baby is due! 🎉",
-            "StartDay": 273,
-            "Duration": 7,
-            "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=1494440e5a5fe04a7fdac4bf4959ca1e"
-        },
-        {
-            "Category": "Your healthcare",
-            "Body": "Dating scan",
-            "StartDay": 70,
-            "Duration": 21
-        },
-        {
-            "Category": "Your healthcare",
-            "Body": "Screening tests offered",
-            "StartDay": 70,
-            "Duration": 21
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "Your baby starts kicking 😍",
-            "StartDay": 105,
-            "Duration": 28
-        },
-        {
-            "Category": "Your healthcare",
-            "Body": "Fetal anomaly scan ",
-            "StartDay": 119,
-            "Duration": 42
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "First kicks felt by others 🤩",
-            "StartDay": 140,
-            "Duration": 35
-        },
-        {
-            "Category": "Your healthcare",
-            "Body": "Gestational diabetes test may be offered",
-            "StartDay": 161,
-            "Duration": 28
-        },
-        {
-            "Category": "Your healthcare",
-            "Body": "Growth scan may be offered ",
-            "StartDay": 161,
-            "Duration": 84
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Prepare your birth plan ",
-            "StartDay": 161,
-            "Duration": 84
-        },
-        {
-            "Category": "Daily habits",
-            "Body": "Monitor your baby's movements 🤰",
-            "StartDay": 161,
-            "Duration": 112
-        },
-        {
-            "Category": "Things to prepare",
-            "Body": "Pack your hospital bag ",
-            "StartDay": 231,
-            "Duration": 14
-        },
-        {
-            "Category": "Your baby's development",
-            "Body": "Your baby may engage",
-            "StartDay": 252,
-            "Duration": 21
-        }
-    ]
+  "Timeline": [
+    {
+      "CategoryId": "Welcome",
+      "Body": "Welcome to your Timeline 👋",
+      "StartDay": 1,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "DailyHabits",
+      "Body": "Folic acid supplement recommended",
+      "StartDay": 1,
+      "Duration": 83
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Last period",
+      "StartDay": 1,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=28fddbada1aae9bcf6d2c24f26f6cf0a"
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Ovulation",
+      "StartDay": 14,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=94bb61190618d545c62bea5d6ea99280"
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Conception",
+      "StartDay": 14,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=fe3242cf53055ef96f038a251e29accd"
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Implantation",
+      "StartDay": 21,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=a0a96c92ae08e7b55f2855456048839e"
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Positive pregnancy test! ",
+      "StartDay": 28,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=ac480c58d1c0dfa2b8424788f9e2fb66"
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Body": "Self-refer to your healthcare provider",
+      "StartDay": 28,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=4d00e595a5851d45ae283d1bab38286f"
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "Your baby's heart starts beating 💓",
+      "StartDay": 35,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=f984b2277658b4f7649874656910c7c2"
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "Your baby's vital organs are mostly formed ",
+      "StartDay": 70,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "Growth measurements change 📏",
+      "StartDay": 98,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "By now, your baby has fingerprints 🖐",
+      "StartDay": 119,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=4892a619ab8d4277c60785e5923ab59d"
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Research antenatal classes",
+      "StartDay": 140,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=ad9200bf92aad30a4bff4fd8f570be8a"
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Learn about the signs of pre-eclampsia",
+      "StartDay": 140,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=68c7effb0c2058b8cec00f74bac27df5"
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "You're halfway there! 🥳",
+      "StartDay": 140,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=041a49e323bdd9f945145523ddecf62b"
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "Your baby can now respond to sound 🎶",
+      "StartDay": 161,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=bd5306149e3a5eb46162d7c9c17fe592"
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "You may feel your baby hiccuping",
+      "StartDay": 175,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=b281860cb1f9b1204bee391626c2ba72"
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Start learning about feeding",
+      "StartDay": 210,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Start learning about postnatal recovery ",
+      "StartDay": 224,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Start learning about the fourth trimester 🤱",
+      "StartDay": 238,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Learn about the signs of labour",
+      "StartDay": 252,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=aca5e186522a6fe396244853a4dc4758"
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Full term! 🗓",
+      "StartDay": 259,
+      "Duration": 7
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Body": "Your baby is due! 🎉",
+      "StartDay": 280,
+      "Duration": 7,
+      "DeepLink": "action://pregnancy/show/content/ArticleContainer?cmsId=1494440e5a5fe04a7fdac4bf4959ca1e"
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Body": "Dating scan",
+      "StartDay": 77,
+      "Duration": 21
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Body": "Screening tests offered",
+      "StartDay": 77,
+      "Duration": 21
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "Your baby starts kicking 😍",
+      "StartDay": 112,
+      "Duration": 28
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Body": "Fetal anomaly scan ",
+      "StartDay": 126,
+      "Duration": 42
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "First kicks felt by others 🤩",
+      "StartDay": 147,
+      "Duration": 35
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Body": "Gestational diabetes test may be offered",
+      "StartDay": 168,
+      "Duration": 28
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Body": "Growth scan may be offered ",
+      "StartDay": 168,
+      "Duration": 84
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Prepare your birth plan ",
+      "StartDay": 168,
+      "Duration": 91
+    },
+    {
+      "CategoryId": "DailyHabits",
+      "Body": "Monitor your baby's movements 🤰",
+      "StartDay": 168,
+      "Duration": 112
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Body": "Pack your hospital bag ",
+      "StartDay": 238,
+      "Duration": 21
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Body": "Your baby may engage",
+      "StartDay": 259,
+      "Duration": 21
+    }
+  ],
+  "CategoryMetadata": [
+    {
+      "CategoryId": "Welcome",
+      "Localised": "Welcome",
+      "CategoryColors": {
+        "GradientType": "Linear",
+        "Codes": [
+          "BF73E5",
+          "F279CA",
+          "FF8080"
+        ]
+      }
+    },
+    {
+      "CategoryId": "PregnancyMilestones",
+      "Localised": "Pregnancy milestones",
+      "CategoryColors": {
+        "GradientType": "Radial",
+        "Codes": [
+          "FF809F",
+          "FFFFFF"
+        ]
+      }
+    },
+    {
+      "CategoryId": "YourBabyDevelopment",
+      "Localised": "Your baby's development",
+      "CategoryColors": {
+        "Codes": [
+          "52CC85"
+        ]
+      }
+    },
+    {
+      "CategoryId": "YourHealthcare",
+      "Localised": "Your healthcare",
+      "CategoryColors": {
+        "Codes": [
+          "9466E0"
+        ]
+      }
+    },
+    {
+      "CategoryId": "DailyHabits",
+      "Localised": "Daily habits",
+      "CategoryColors": {
+        "Codes": [
+          "FFA200"
+        ]
+      }
+    },
+    {
+      "CategoryId": "ThingsToPrepare",
+      "Localised": "Things to prepare",
+      "CategoryColors": {
+        "Codes": [
+          "F1A183"
+        ]
+      }
+    }
+  ]
 }

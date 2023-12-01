@@ -4,23 +4,23 @@ import SwiftUI
 
 class TimelineViewModel: ObservableObject {
     @Published var timePills: [TimelinePill] = []
-    var priorityCategories: [String] = []
+    var categoryMetaData: [CategoryMetadata] = []
     private var pillRowMapping: [UUID: Int] = [:]
 
     init() {
         loadTimeline()
-        calculateRows(for: timePills, withPriority: priorityCategories)
+        calculateRows(for: timePills, withPriority: categoryMetaData)
     }
     
     private func loadTimeline() {
-        guard let timeline = TimelineHelper().loadTimelineValues() else {
+        guard let timeline = TimelineHelper().loadTimelineJSON() else {
             return
         }
-        timePills = TimelineHelper().sort(timeline: timeline)
-        priorityCategories = timeline.priorityOfCategories ?? []
+        timePills = TimelineHelper().fillTimelinePillMetaDataAndSort(timeline: timeline)
+        categoryMetaData = timeline.categoryMetaData ?? []
     }
-
-    private func calculateRows(for pills: [TimelinePill], withPriority priorityCategories: [String]) {
+    private func calculateRows(for pills: [TimelinePill],
+                               withPriority priorityCategories: [CategoryMetadata]) {
         for pill in pills {
             let row = TimelineHelper.determineRow(for: pill, in: pills, withPriority: priorityCategories)
             pillRowMapping[pill.id] = row
@@ -40,6 +40,4 @@ class TimelineViewModel: ObservableObject {
             return pillRow == row && pillWeek == week
         }
     }
-
-
 }

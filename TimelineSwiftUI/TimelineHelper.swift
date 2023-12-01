@@ -5,13 +5,12 @@ import UIKit
 public enum Categories:String {
 
     case welcome = "Welcome"
-    case pregnancyMilestones = "Pregnancy milestones"
-    case babysDevelopment = "Your baby's development"
-    case healthcare = "Your healthcare"
-    case dailyHabits = "Daily habits"
-    case thingsToPrepare = "Things to prepare"
+    case pregnancyMilestones = "PregnancyMilestones"
+    case babysDevelopment = "YourBabyDevelopment"
+    case healthcare = "YourHealthcare"
+    case dailyHabits = "DailyHabits"
+    case thingsToPrepare = "ThingsToPrepare"
     case unknown
-    
     
     var color: UIColor {
             switch self {
@@ -35,7 +34,7 @@ public enum Categories:String {
 
 class TimelineHelper: NSObject {
 
-    func loadTimelineValues() -> Timeline? {
+    func loadTimelineJSON() -> Timeline? {
         if let url = Bundle.main.url(forResource: "Timeline", withExtension: "json") {
                do {
                    let data = try Data(contentsOf: url)
@@ -49,45 +48,50 @@ class TimelineHelper: NSObject {
            return nil
     }
     
-    func sort(timeline: Timeline) -> [TimelinePill] {
-        guard let timelineCards = timeline.timeline else {
+    func fillTimelinePillMetaDataAndSort(timeline: Timeline) -> [TimelinePill] {
+        guard let timelinePills = timeline.timelinePills,
+                let categoryMetadata = timeline.categoryMetaData else {
             return []
         }
-        let filteredArray = timelineCards.sorted {
+        let filledTimelinePills = fillPillCategoryMetadata(timelinePills: timelinePills,
+                                                           categoryMetaData: categoryMetadata)
+        return sort(timeline: filledTimelinePills)
+    }
+    
+    private func fillPillCategoryMetadata(timelinePills: [TimelinePill],
+                                            categoryMetaData: [CategoryMetadata]) -> [TimelinePill] {
+        for timelinePill in timelinePills {
+            timelinePill.priority = categoryMetaData.firstIndex{$0.id == timelinePill.categoryId} ?? 0
+            //any other updation  which makes ui plotting easier can be added here
+        }
+        return timelinePills
+    }
+    
+    func sort(timeline: [TimelinePill]) -> [TimelinePill] {
+        return timeline.sorted {
             if $0.startDay == $1.startDay {
-                if categories($0.category ?? "", timeline.priorityOfCategories) == categories($1.category ?? "", timeline.priorityOfCategories) {
-                    let vv = ($0.startDay ?? 0) + ($0.duration ?? 0)
-                    let rrr = ($1.startDay ?? 0) + ($1.duration ?? 0)
-                    return vv < rrr
+                if $0.priority ?? 0 == $1.priority ?? 0 {
+                    return $0.duration ?? 0 < $1.duration ?? 0
                 }
-                return categories($0.category ?? "", timeline.priorityOfCategories) < categories($1.category ?? "", timeline.priorityOfCategories)
+                return $0.priority ?? 0 < $1.priority ?? 0
             }
             return $0.startDay ?? 0 < $1.startDay ?? 0
         }
-        return filteredArray
     }
-    
-    func categories(_ categ: String, _ priorities: [String]?) -> Int {
-        guard let priority = priorities else {
-            return 100 //some random number
-        }
-        
-        let pri = priority.firstIndex{ $0 == categ}
-        return pri ?? 100
-    }
-    
 }
 
 extension TimelineHelper {
     
-    static func determineRow(for targetPill: TimelinePill, in pills: [TimelinePill], withPriority priorityCategories: [String]) -> Int {
+    static func determineRow(for targetPill: TimelinePill,
+                             in pills: [TimelinePill],
+                             withPriority priorityCategories: [CategoryMetadata]) -> Int {
         // Mapping of week number to rows occupied in that week
         var occupiedRowsByWeek: [Int: [Int]] = [:]
 
         // Sort all pills including the target pill by priority
         let sortedPills = (pills + [targetPill]).sorted(by: {
-            priorityIndex(for: $0.category, priorityCategories: priorityCategories) <
-            priorityIndex(for: $1.category, priorityCategories: priorityCategories)
+            $0.priority ?? 0 < $1.priority ?? 0
+            //priorityIndex(for: $1.categoryId, priorityCategories: priorityCategories)
         })
 
         for pill in sortedPills {
@@ -126,10 +130,5 @@ extension TimelineHelper {
             row += 1
         }
         return row
-    }
-
-    private static func priorityIndex(for category: String?, priorityCategories: [String]) -> Int {
-        guard let category = category else { return priorityCategories.count }
-        return priorityCategories.firstIndex(of: category) ?? priorityCategories.count
     }
 }
