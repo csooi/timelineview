@@ -3,12 +3,11 @@ import SwiftUI
 struct TimelineView: View {
     @ObservedObject var viewModel: TimelineViewModel
     var body: some View {
-        LazyHStack(alignment: .top, spacing: 0) {
+        LazyHStack(spacing: 0) {
             ForEach(0..<42) { week in
-                VStack(alignment: .leading) {
-                    Text("Week \(week + 1)").frame(maxWidth: .infinity, alignment: .center)
-                    
-                    HStack(alignment: .center, spacing: 1) {
+                VStack(alignment: .center, spacing: 0) {
+                    Text("Week \(week + 1)")
+                    HStack(alignment: .center, spacing: 0) {
                         ZStack() {
                             Rectangle()
                                 .fill(Color.white)
@@ -18,12 +17,10 @@ struct TimelineView: View {
                                     if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
                                         Text((pill.body ?? "ttiel") + " \(pill.duration ?? 0)" )
                                             .font(.system(size: 20.0, weight: .bold))
-                                            .padding(.horizontal, 10.0)
                                             .foregroundColor(.white)
-                                            .fixedSize(horizontal: false, vertical: false)
-                                            .frame(width: CGFloat(pill.duration ?? 0)/7.0 * weekWidth())
+                                            .frame(width: (CGFloat(pill.duration ?? 0) / 7.0) * weekWidth())
                                             .padding(.vertical, 20.0)
-                                            .multilineTextAlignment(.leading)
+                                            .padding(.horizontal, 20.0)
                                             .lineLimit(3)
                                             .background(RoundedRectangle(cornerRadius: 10).fill(Color(pill.color ?? UIColor.red)))
                                             .onTapGesture {
@@ -31,14 +28,11 @@ struct TimelineView: View {
                                             }
                                     }
                                 }
-                                
-                                
                             }
                         }
-                    }.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                }
+                    }
+                }.frame(width: UIScreen.main.bounds.width)
             }
-            
         }.modifier(ScrollingHStackModifier(
             items: 42,
             itemWidth: UIScreen.main.bounds.width,
