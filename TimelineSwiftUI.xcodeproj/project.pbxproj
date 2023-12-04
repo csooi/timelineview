@@ -10,6 +10,7 @@
 		7F80521F2B15C12D00EA1A1F /* TimelineCodables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F80521C2B15C12D00EA1A1F /* TimelineCodables.swift */; };
 		7F8052202B15C12D00EA1A1F /* Timeline.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F80521D2B15C12D00EA1A1F /* Timeline.json */; };
 		7F8052212B15C12D00EA1A1F /* TimelineHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */; };
+		EFBE74A42B1DD30000954B9D /* LegacyScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = EFBE74A32B1DD30000954B9D /* LegacyScrollView */; };
 		FF1FE7EA2B183ABB0060523D /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1FE7E92B183ABB0060523D /* TimelineViewModel.swift */; };
 		FF3BA9692B0F42820038E76D /* TimelineSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */; };
 		FF3BA96B2B0F42820038E76D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA96A2B0F42820038E76D /* ContentView.swift */; };
@@ -34,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFBE74A42B1DD30000954B9D /* LegacyScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +97,9 @@
 			dependencies = (
 			);
 			name = TimelineSwiftUI;
+			packageProductDependencies = (
+				EFBE74A32B1DD30000954B9D /* LegacyScrollView */,
+			);
 			productName = TimelineSwiftUI;
 			productReference = FF3BA9652B0F42820038E76D /* TimelineSwiftUI.app */;
 			productType = "com.apple.product-type.application";
@@ -123,6 +128,9 @@
 				Base,
 			);
 			mainGroup = FF3BA95C2B0F42820038E76D;
+			packageReferences = (
+				EFBE74A22B1DD30000954B9D /* XCRemoteSwiftPackageReference "LegacyScrollView" */,
+			);
 			productRefGroup = FF3BA9662B0F42820038E76D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -357,6 +365,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EFBE74A22B1DD30000954B9D /* XCRemoteSwiftPackageReference "LegacyScrollView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/perimeter-inc/LegacyScrollView";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EFBE74A32B1DD30000954B9D /* LegacyScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EFBE74A22B1DD30000954B9D /* XCRemoteSwiftPackageReference "LegacyScrollView" */;
+			productName = LegacyScrollView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FF3BA95D2B0F42820038E76D /* Project object */;
 }

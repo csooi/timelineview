@@ -1,4 +1,5 @@
 import SwiftUI
+import LegacyScrollView
 
 struct TimelineUIConstants {
     static let heightOfWeekView: CGFloat = 40
@@ -28,7 +29,7 @@ struct TimelineView: View {
                     .foregroundColor(.black)
                     .padding([.leading, .trailing], 10)
                     .padding([.top, .bottom], 4)
-
+                
                     .background(
                         Capsule()
                             .fill(Color.gray)
@@ -38,7 +39,7 @@ struct TimelineView: View {
                 
             }
             //.background(Color.green)
-            ScrollView(.horizontal, showsIndicators: false) {
+            LegacyScrollView(.horizontal, showsIndicators: false) {
                 VStack(alignment: .leading) {
                     //Week header
                     HStack {
@@ -57,9 +58,9 @@ struct TimelineView: View {
                             ForEach(0..<42, id: \.self) { week in
                                 ZStack(alignment: .center) {
                                     // The week background (can be empty or styled)
-                                    Rectangle()
-                                        .fill(Color.clear)
-                                        .frame(width: weekWidth(geometry.size.width), height: 30)
+//                                                                        Rectangle()
+//                                                                            .fill(Color.clear)
+//                                                                            .frame(width: weekWidth(geometry.size.width), height: 30)
                                     // Overlay TimePill if it exists for this week and row
                                     if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
                                         Rectangle()
@@ -83,6 +84,27 @@ struct TimelineView: View {
                         }
                     }
                 }
+            }.onEndDragging { scrollView in
+                let minX: CGFloat =  max(scrollView.visibleRect.minX, 0)
+                
+                if (scrollView.visibleRect.maxX >= scrollView.contentSize.width) {
+                    return
+                }
+                let index = Int((minX / scrollView.contentSize.width) * 42)
+                
+                let scrollToX = CGFloat(index) * (scrollView.contentSize.width / CGFloat(42))
+                print(scrollToX)
+                scrollView.setContentOffset(CGPoint(x: scrollToX, y: 0), animated: true)
+            }.onEndDecelerating { scrollView in
+                let minX: CGFloat = max(scrollView.visibleRect.minX, 0)
+                if (scrollView.visibleRect.maxX >= scrollView.contentSize.width) {
+                    return
+                }
+                let index = Int((minX / scrollView.contentSize.width) * 42)
+                let scrollToX = CGFloat(index) * scrollView.contentSize.width / CGFloat(42)
+                
+                print(Int(scrollToX))
+                scrollView.setContentOffset(CGPoint(x: Int(scrollToX), y: 0), animated: true)
             }
         }
     }
