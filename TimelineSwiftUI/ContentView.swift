@@ -59,7 +59,7 @@ struct TimelineView: View {
                                     // The week background (can be empty or styled)
                                     Rectangle()
                                         .fill(Color.clear)
-                                        .frame(width: weekWidth(geometry.size.width), height: 30)
+                                        .frame(width: weekWidth(geometry.size.width))
                                     // Overlay TimePill if it exists for this week and row
                                     if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
                                         Rectangle()
@@ -75,7 +75,7 @@ struct TimelineView: View {
                                             .foregroundColor(.white)
                                             .fixedSize(horizontal: false, vertical: true)
                                             .frame(width: CGFloat(pill.duration ?? 0)/7.0 * weekWidth(geometry.size.width))
-                                            .padding(.vertical, 20.0)
+                                            .padding(.vertical, 12.0)
                                             .lineLimit(3)
                                     }
                                 }
