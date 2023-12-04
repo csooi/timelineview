@@ -25,9 +25,10 @@ struct ScrollingHStackModifier: ViewModifier {
         let contentWidth: CGFloat = CGFloat(items) * itemWidth + CGFloat(items - 1) * itemSpacing
         let screenWidth = UIScreen.main.bounds.width
         
+        print(contentWidth)
         // Set Initial Offset to first Item
-        let initialOffset = (contentWidth/2.0) - (screenWidth/2.0) + ((screenWidth - itemWidth) / 2.0)
-        
+        let initialOffset = (contentWidth/2.0) + (screenWidth / 2.0) + 7.0 * 2.0
+        print(screenWidth)
         self._scrollOffset = State(initialValue: initialOffset)
         self._dragOffset = State(initialValue: 0)
     }
@@ -62,12 +63,12 @@ struct ScrollingHStackModifier: ViewModifier {
                     }
                     
                     // Protect from scrolling out of bounds
-                    index = min(index, CGFloat(items) - 1)
+                    index = min(index, CGFloat(items))
                     index = max(index, 0)
                     
                     // Set final offset (snapping to item)
-                    let newOffset = index * itemWidth + (index - 1) * itemSpacing - (contentWidth / 2.0) + (screenWidth / 2.0) - ((screenWidth - itemWidth) / 2.0) + itemSpacing
-                    
+                    let newOffset = index * itemWidth - (contentWidth/2.0) + (screenWidth / 2.0) + 7.0 * 2.0
+                    print(newOffset)
                     // Animate snapping
                     withAnimation {
                         scrollOffset = newOffset

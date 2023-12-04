@@ -3,12 +3,10 @@ import SwiftUI
 struct TimelineView: View {
     @ObservedObject var viewModel: TimelineViewModel
     var body: some View {
-        LazyHStack(spacing: 0) {
-            ForEach(0..<42) { week in
-                VStack(alignment: .center, spacing: 0) {
-                    Text("Week \(week + 1)")
+            LazyHStack(spacing: 0) {
+                ForEach(0..<42) { week in
                     HStack(alignment: .center, spacing: 0) {
-                        ZStack() {
+                        ZStack(alignment: .leading) {
                             Rectangle()
                                 .fill(Color.white)
                                 .frame(width: UIScreen.main.bounds.width)
@@ -31,9 +29,10 @@ struct TimelineView: View {
                             }
                         }
                     }
-                }.frame(width: UIScreen.main.bounds.width)
+                }
             }
-        }.modifier(ScrollingHStackModifier(
+        
+        .modifier(ScrollingHStackModifier(
             items: 42,
             itemWidth: UIScreen.main.bounds.width,
             itemSpacing: 0))
@@ -79,7 +78,7 @@ struct TimelineView: View {
 
     func weekWidth(_ screenWidth: CGFloat? = UIScreen.main.bounds.width) -> CGFloat {
         // Calculate the width for each week column
-        (screenWidth ?? 0) / 3
+        (screenWidth ?? 0) / 7
     }
 
     func maxRow(in timePills: [TimelinePill]) -> Int {
