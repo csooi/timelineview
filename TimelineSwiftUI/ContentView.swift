@@ -38,10 +38,11 @@ struct TimelineView: View {
                                       y: TimelineUIConstants.positionOfWeeksZstackElements+30))
                 
             }
-            //.background(Color.green)
             LegacyScrollView(.horizontal, showsIndicators: false) {
                 VStack(alignment: .leading) {
                     //Week header
+                    
+                    Spacer().frame(height: 120)
                     HStack {
                         ForEach(0..<42, id: \.self) { week in
                             Text("\(week)")
@@ -54,13 +55,13 @@ struct TimelineView: View {
                     }
                     Spacer().frame(height: 80)
                     ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
-                        HStack(alignment: .top, spacing: 1) {
+                        HStack(alignment: .center, spacing: 0) {
                             ForEach(0..<42, id: \.self) { week in
                                 ZStack(alignment: .center) {
                                     // The week background (can be empty or styled)
-//                                                                        Rectangle()
-//                                                                            .fill(Color.clear)
-//                                                                            .frame(width: weekWidth(geometry.size.width), height: 30)
+                                    Rectangle()
+                                        .fill(Color.clear)
+                                        .frame(width: weekWidth(geometry.size.width))
                                     // Overlay TimePill if it exists for this week and row
                                     if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
                                         Rectangle()
@@ -85,28 +86,23 @@ struct TimelineView: View {
                     }
                 }
             }.onEndDragging { scrollView in
-                let minX: CGFloat =  max(scrollView.visibleRect.minX, 0)
-                
-                if (scrollView.visibleRect.maxX >= scrollView.contentSize.width) {
-                    return
-                }
-                let index = Int((minX / scrollView.contentSize.width) * 42)
-                
-                let scrollToX = CGFloat(index) * (scrollView.contentSize.width / CGFloat(42))
-                print(scrollToX)
-                scrollView.setContentOffset(CGPoint(x: scrollToX, y: 0), animated: true)
+                snapWith(scrollView: scrollView)
             }.onEndDecelerating { scrollView in
-                let minX: CGFloat = max(scrollView.visibleRect.minX, 0)
-                if (scrollView.visibleRect.maxX >= scrollView.contentSize.width) {
-                    return
-                }
-                let index = Int((minX / scrollView.contentSize.width) * 42)
-                let scrollToX = CGFloat(index) * scrollView.contentSize.width / CGFloat(42)
-                
-                print(Int(scrollToX))
-                scrollView.setContentOffset(CGPoint(x: Int(scrollToX), y: 0), animated: true)
+                snapWith(scrollView: scrollView)
             }
         }
+    }
+    
+    func snapWith(scrollView: UIScrollView) {
+        let minX: CGFloat =  max(scrollView.visibleRect.minX, 0)
+        
+        if (scrollView.visibleRect.maxX >= scrollView.contentSize.width) {
+            return
+        }
+        let index = Int((minX / scrollView.contentSize.width) * 42)
+        
+        let scrollToX = CGFloat(index) * (scrollView.contentSize.width / CGFloat(42))
+        scrollView.setContentOffset(CGPoint(x: scrollToX, y: 0), animated: true)
     }
     
     func weekWidth(_ screenWidth: CGFloat) -> CGFloat {
