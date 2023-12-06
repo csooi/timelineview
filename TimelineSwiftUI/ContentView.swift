@@ -7,7 +7,7 @@ struct TimelineUIConstants {
 
 struct TimelineView: View {
     @ObservedObject var viewModel: TimelineViewModel
-    
+    @State private var scrollPosition: CGPoint = .zero
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -82,8 +82,16 @@ struct TimelineView: View {
                             }
                         }
                     }
+                }.background(GeometryReader { geometry in
+                    Color.clear
+                        .preference(key: ScrollOffsetPreferenceKey.self, value: geometry.frame(in: .named("scroll")).origin)
+                })
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    self.scrollPosition = value
+                    print(value)
                 }
-            }
+            }.coordinateSpace(name: "scroll")
+                
         }
     }
     
@@ -101,5 +109,13 @@ struct TimelineView: View {
 struct TimelineView_Previews: PreviewProvider {
     static var previews: some View {
         TimelineView(viewModel: TimelineViewModel())
+    }
+}
+
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGPoint = .zero
+    
+    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {
     }
 }
