@@ -40,4 +40,18 @@ class TimelineViewModel: ObservableObject {
             return pillRow == row && pillWeek == week
         }
     }
+    
+    func isOccupying(week: Int, row: Int) -> Bool {
+        return timePills.contains { pill in
+            guard let pillRow = pillRowMapping[pill.id],
+                  let startDay = pill.startDay,
+                  let duration = pill.duration else {
+                return false
+            }
+
+            let pillStartWeek = startDay / 7
+            let pillEndWeek = (startDay + duration - 1) / 7
+            return pillRow == row && week >= pillStartWeek && week < pillEndWeek
+        }
+    }
 }
