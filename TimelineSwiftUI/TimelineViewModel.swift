@@ -6,7 +6,8 @@ class TimelineViewModel: ObservableObject {
     @Published var timePills: [TimelinePill] = []
     var categoryMetaData: [CategoryMetadata] = []
     private var pillRowMapping: [UUID: Int] = [:]
-
+    var currentWeek: Int = 5
+    
     init() {
         loadTimeline()
         calculateRows(for: timePills, withPriority: categoryMetaData)
