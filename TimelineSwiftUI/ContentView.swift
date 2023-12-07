@@ -163,22 +163,26 @@ struct PillView: View {
     @State var widthPerWeek: CGFloat
     @State private var pillGeometries: [UUID: CGRect] = [:]
     var body: some View {
-        Rectangle()
-            .fill(Color(pill.color ?? UIColor.red))
-            .cornerRadius(8)
-            .padding(.horizontal, 4.0)
-            .frame(width: CGFloat(Int(pill.duration ?? 0)/7) * widthPerWeek)
-            .onTapGesture {
-                print("Tapped")
-            }
-            .background(GeometryReader { geometry in
-                Color.clear
-                    .onChange(of: geometry.frame(in: .global)) { newFrame in
-                        pillGeometries[pill.id] = newFrame
-                    }
+        ZStack {
+            Rectangle()
+                .fill(pill.color ?? Color.blue).opacity(0.12)
+                .cornerRadius(8)
+                .padding(.horizontal, 4.0)
+                .frame(width: CGFloat(Int(pill.duration ?? 0)/7) * widthPerWeek)
+                .onTapGesture {
+                    print("Tapped")
+                }
+                .background(GeometryReader { geometry in
+                    Color.white
+                        .onChange(of: geometry.frame(in: .global)) { newFrame in
+                            pillGeometries[pill.id] = newFrame
+                        }
             })
+            
+        }
         Text((pill.body ?? ""))
             .font(.system(size: 16.0, weight: .medium))
+            .foregroundColor(pill.color ?? Color.blue)
             .padding(.horizontal, 10.0)
             .foregroundColor(.white)
             .fixedSize(horizontal: false, vertical: true)

@@ -12,6 +12,7 @@
 		7F8052212B15C12D00EA1A1F /* TimelineHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */; };
 		EFBE74A42B1DD30000954B9D /* LegacyScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = EFBE74A32B1DD30000954B9D /* LegacyScrollView */; };
 		FF1FE7EA2B183ABB0060523D /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1FE7E92B183ABB0060523D /* TimelineViewModel.swift */; };
+		FF244B372B22269C00F51591 /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF244B362B22269C00F51591 /* UIExtensions.swift */; };
 		FF3BA9692B0F42820038E76D /* TimelineSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */; };
 		FF3BA96B2B0F42820038E76D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA96A2B0F42820038E76D /* ContentView.swift */; };
 		FF3BA96D2B0F42830038E76D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF3BA96C2B0F42830038E76D /* Assets.xcassets */; };
@@ -23,6 +24,7 @@
 		7F80521D2B15C12D00EA1A1F /* Timeline.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Timeline.json; sourceTree = "<group>"; };
 		7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineHelper.swift; sourceTree = "<group>"; };
 		FF1FE7E92B183ABB0060523D /* TimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = "<group>"; };
+		FF244B362B22269C00F51591 /* UIExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		FF3BA9652B0F42820038E76D /* TimelineSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimelineSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineSwiftUIApp.swift; sourceTree = "<group>"; };
 		FF3BA96A2B0F42820038E76D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */,
 				FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */,
 				FF1FE7E92B183ABB0060523D /* TimelineViewModel.swift */,
+				FF244B362B22269C00F51591 /* UIExtensions.swift */,
 				FF3BA96A2B0F42820038E76D /* ContentView.swift */,
 				FF3BA96C2B0F42830038E76D /* Assets.xcassets */,
 				FF3BA96E2B0F42830038E76D /* Preview Content */,
@@ -161,6 +164,7 @@
 				FF3BA96B2B0F42820038E76D /* ContentView.swift in Sources */,
 				7F80521F2B15C12D00EA1A1F /* TimelineCodables.swift in Sources */,
 				7F8052212B15C12D00EA1A1F /* TimelineHelper.swift in Sources */,
+				FF244B372B22269C00F51591 /* UIExtensions.swift in Sources */,
 				FF3BA9692B0F42820038E76D /* TimelineSwiftUIApp.swift in Sources */,
 				FF1FE7EA2B183ABB0060523D /* TimelineViewModel.swift in Sources */,
 			);

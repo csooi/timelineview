@@ -1,6 +1,6 @@
 //Copyright © 2022 Koninklijke Philips N.V. All rights reserved.
 
-import UIKit
+import SwiftUI
 
 class Timeline: Codable {
     var categoryMetaData: [CategoryMetadata]?
@@ -33,14 +33,14 @@ class TimelinePill: Codable, Identifiable {
     var startDay: Int?
     var duration: Int?
     var priority: Int?
-
-    var color: UIColor? {
-        guard let category = categoryId else {
-            return nil
-        }
-        let cate = Categories(rawValue: category)
-        return cate?.color
-    }
+    var color: Color?
+//    var color: UIColor? {
+//        guard let category = categoryId else {
+//            return nil
+//        }
+//        let cate = Categories(rawValue: category)
+//        return cate?.color
+//    }
 
     enum CodingKeys: String, CodingKey {
         case categoryId = "CategoryId"

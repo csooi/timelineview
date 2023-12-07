@@ -1,6 +1,6 @@
 //Copyright © 2022 Koninklijke Philips N.V. All rights reserved.
 
-import UIKit
+import SwiftUI
 
 public enum Categories:String {
 
@@ -62,11 +62,20 @@ class TimelineHelper: NSObject {
                                             categoryMetaData: [CategoryMetadata]) -> [TimelinePill] {
         for timelinePill in timelinePills {
             timelinePill.priority = categoryMetaData.firstIndex{$0.id == timelinePill.categoryId} ?? 0
-            //any other updation  which makes ui plotting easier can be added here
+            timelinePill.color = colorForCategory(categoryId: timelinePill.categoryId ?? "", in: categoryMetaData) ?? Color.blue          //any other updation  which makes ui plotting easier can be added here
         }
         return timelinePills
     }
     
+    func colorForCategory(categoryId: String, in categoryMetadataArray: [CategoryMetadata]) -> Color? {
+        guard let matchingMetadata = categoryMetadataArray.first(where: { $0.id == categoryId }),
+              let hexColorString = matchingMetadata.categoryColors?.codes?.first else {
+            return nil
+        }
+
+        return Color(hex: hexColorString)
+    }
+
     func sort(timeline: [TimelinePill]) -> [TimelinePill] {
         return timeline.sorted {
             if $0.startDay == $1.startDay {
