@@ -227,36 +227,3 @@ struct TimelineView_Previews: PreviewProvider {
         TimelineView(viewModel: TimelineViewModel())
     }
 }
-
-
-extension View {
-    /// Adds an action to perform after this view appears for the first time.
-    ///
-    /// - Parameter action: The action to perform.
-    /// - Returns: A view that triggers `action` after it appears.
-    func afterFirstRender(perform action: @escaping () -> Void) -> some View {
-        self.modifier(FirstRenderTracker(action: action))
-    }
-}
-
-// ViewModifier supporting the `afterFirstRender()` extension
-struct FirstRenderTracker: ViewModifier {
-    @State private var isRendered = false
-    let action: () -> Void
-    
-    func body(content: Content) -> some View {
-        content
-            .onAppear {
-                isRendered = true
-            }
-            .onDisappear {
-                isRendered = false
-            }
-            .onChange(of: isRendered) { isRendered in
-                if isRendered {
-                    action()
-                }
-            }
-    }
-}
-
