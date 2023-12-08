@@ -78,13 +78,13 @@ class TimelineHelper: NSObject {
 
     func sort(timeline: [TimelinePill]) -> [TimelinePill] {
         return timeline.sorted {
-            if $0.startDay == $1.startDay {
+            if $0.startWeek == $1.startWeek {
                 if $0.priority ?? 0 == $1.priority ?? 0 {
                     return $0.duration ?? 0 < $1.duration ?? 0
                 }
                 return $0.priority ?? 0 < $1.priority ?? 0
             }
-            return $0.startDay ?? 0 < $1.startDay ?? 0
+            return $0.startWeek ?? 0 < $1.startWeek ?? 0
         }
     }
 }
@@ -104,8 +104,8 @@ extension TimelineHelper {
         })
 
         for pill in sortedPills {
-            guard let startWeek = weekNumber(for: pill.startDay),
-                  let endWeek = weekNumber(for: (pill.startDay ?? 0) + (pill.duration ?? 0)) else {
+            let startWeek = (pill.startWeek ?? 1) - 1
+            guard let endWeek = pill.endWeek else {
                 continue
             }
 
@@ -126,12 +126,7 @@ extension TimelineHelper {
         }
         return 0
     }
-
-    private static func weekNumber(for day: Int?) -> Int? {
-        guard let day = day else { return nil }
-        return (day - 1) / 7
-    }
-
+    
     private static func findNextAvailableRow(in occupiedRowsByWeek: [Int: [Int]], forWeek week: Int) -> Int {
         let occupiedRows = occupiedRowsByWeek[week, default: []]
         var row = 0
