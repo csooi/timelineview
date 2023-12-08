@@ -13,119 +13,125 @@ struct TimelineView: View {
     let bombayLB = Color(red: 0.69, green: 0.69, blue: 0.71)
     let concreteLB = Color(red: 0.95, green: 0.95, blue: 0.97)
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Rectangle()
-                    .frame(width:geometry.size.width , height: 3)
-                    .foregroundColor(Color(red: 0.95, green: 0.95, blue: 0.97))
-                    .position(CGPoint(x: geometry.size.width/2 ,
-                                      y: TimelineUIConstants.positionOfWeeksZstackElements ))
-                Text("WEEKS")
-                    .font(.system(size: 12.0, weight: .bold))
-                    .foregroundColor(Color(bleen))
-                    .background(Color.white)
-                    .position(CGPoint(x: geometry.size.width/2 ,
-                                      y: TimelineUIConstants.positionOfWeeksZstackElements))
-                    .padding([.leading, .trailing], 4)
-                
-            }
-            LegacyScrollView(.horizontal, showsIndicators: false) {
+        LegacyScrollViewReader { proxy in
+            GeometryReader { geometry in
                 ZStack {
-                    VStack {
-                        Circle().fill(Color(red: 1, green: 0.3, blue: 0.39))
-                            .frame(width: 10)
-                            .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
-                                                                           y: geometry.size.height / 2)
-//                        .offset(y: 80)
-                        Rectangle()
-                            .fill(Color.red)
-                            .frame(width: 2, height: geometry.size.height)
-                            .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
-                                      y: geometry.size.height / 2)
-//                        .offset(y: 80)
-                    }.offset(y: -geometry.size.height / 2 + 80)
+                    Rectangle()
+                        .frame(width:geometry.size.width , height: 3)
+                        .foregroundColor(Color(red: 0.95, green: 0.95, blue: 0.97))
+                        .position(CGPoint(x: geometry.size.width/2 ,
+                                          y: TimelineUIConstants.positionOfWeeksZstackElements ))
+                    Text("WEEKS")
+                        .font(.system(size: 12.0, weight: .bold))
+                        .foregroundColor(Color(bleen))
+                        .background(Color.white)
+                        .position(CGPoint(x: geometry.size.width/2 ,
+                                          y: TimelineUIConstants.positionOfWeeksZstackElements))
+                        .padding([.leading, .trailing], 4)
                     
-                    VStack(alignment: .leading) {
-                        //Week header
-                        
-                        Spacer()
-                        HStack(spacing: 0) {
-                            ForEach(0..<43, id: \.self) { week in
-                                Text(week == 0 ? "<1" : "\(week)")
-                                    .font(
-                                        Font.system(size: week == Int(currentIndex) ? 28 : 18)
-                                            .weight(.semibold)
-                                    )
-                                    .frame(width: weekWidth(geometry.size.width))
-                                    .foregroundColor(week == Int(currentIndex) ? Color(bleen) : bombayLB)
-                                    .onTapGesture {
-                                        print("week tapped")
-                                    }
-                            }
-                        }
-                        Spacer().frame(height: 70)
-                        ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
-                            HStack(alignment: .top, spacing: 0) {
+                }
+                LegacyScrollView(.horizontal, showsIndicators: false) {
+                    ZStack {
+                        VStack {
+                            Circle().fill(Color(red: 1, green: 0.3, blue: 0.39))
+                                .frame(width: 10)
+                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
+                                          y: geometry.size.height / 2)
+                            //                        .offset(y: 80)
+                            Rectangle()
+                                .fill(Color.red)
+                                .frame(width: 2, height: geometry.size.height)
+                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
+                                          y: geometry.size.height / 2)
+                            //                        .offset(y: 80)
+                        }.offset(y: -geometry.size.height / 2 + 80)
+                        VStack(alignment: .leading) {
+                            //Week header
+                            
+                            Spacer()
+                            HStack(spacing: 0) {
                                 ForEach(0..<43, id: \.self) { week in
-                                    ZStack(alignment: .center) {
+                                    Text(week == 0 ? "<1" : "\(week)")
+//                                        .legacyId(week)
+                                        .font(
+                                            Font.system(size: week == Int(currentIndex) ? 28 : 18)
+                                                .weight(.semibold)
+                                        )
                                         
-                                        // The week background (can be empty or styled)
-                                        Rectangle()
-                                            .fill(Color.clear)
-                                            .frame(width: (viewModel.isOccupying(week: week,
-                                                                                 row: row)) ? 0.0 : weekWidth(geometry.size.width))
-                                        // Overlay TimePill if it exists for this week and row
-                                        if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
-                                            PillView(pill: pill,
-                                                     widthPerWeek: weekWidth(geometry.size.width))
+                                        .frame(width: weekWidth(geometry.size.width))
+                                        .foregroundColor(week == Int(currentIndex) ? Color(bleen) : bombayLB)
+                                        .onTapGesture {
+                                            scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(week), animated: true)
                                         }
-                                        
+                                }
+                            }
+                            Spacer().frame(height: 70)
+                            ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
+                                HStack(alignment: .top, spacing: 0) {
+                                    ForEach(0..<43, id: \.self) { week in
+                                        ZStack(alignment: .center) {
+                                            
+                                            // The week background (can be empty or styled)
+                                            Rectangle()
+                                                .fill(Color.clear)
+                                                .frame(width: (viewModel.isOccupying(week: week,
+                                                                                     row: row)) ? 0.0 : weekWidth(geometry.size.width))
+                                            // Overlay TimePill if it exists for this week and row
+                                            if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
+                                                PillView(pill: pill,
+                                                         widthPerWeek: weekWidth(geometry.size.width))
+                                            }
+                                            
+                                        }
                                     }
                                 }
                             }
-                        }
-                    }.padding(.horizontal, geometry.size.width/3)
+                        }.padding(.horizontal, geometry.size.width/3)
+                    }
+                    .onAppear {
+                        scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(viewModel.currentWeek), animated: false)
+                    }
                 }
-            }
-            .onEndDragging { scrollView in
-                snapWith(scrollView: scrollView)
-            }.onEndDecelerating { scrollView in
-                snapWith(scrollView: scrollView)
-            }
-            .background(
-                VStack {
-                    Rectangle()
-                        .fill(LinearGradient(gradient: Gradient(colors: [Color.white, Color(red: 0.95, green: 0.95, blue: 0.97).opacity(1), Color.white]),
-                                             startPoint: .top,
-                                             endPoint: .bottom))
-                        .frame(width: 2,
-                               height: geometry.size.height)
-                        .position(x: geometry.size.width/3,
-                                  y: geometry.size.height/2)
-                        .offset(y: 0)
-                    Rectangle()
-                        .fill(LinearGradient(gradient: Gradient(colors: [Color.white, Color(red: 0.95, green: 0.95, blue: 0.97).opacity(1), Color.white]),
-                                             startPoint: .top,
-                                             endPoint: .bottom))
-                        .frame(width: 2, height: geometry.size.height)
-                        .position(x: geometry.size.width/3 * 2, y: 0)
-                        .offset(y: 0)
+                .onEndDragging { scrollView in
+                    snapWith(scrollView: scrollView)
+                }.onEndDecelerating { scrollView in
+                    snapWith(scrollView: scrollView)
                 }
-            )
-            Text("11 Dec - 18 Dec") //TBD: calculate and update
-                .font(Font.custom("SF Pro", size: 10))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.black)
-                .padding([.leading, .trailing], 10)
-                .padding([.top, .bottom], 4)
-            
                 .background(
-                    Capsule()
-                        .fill(concreteLB)
-                        .frame(width: 100)
+                    VStack {
+                        Rectangle()
+                            .fill(LinearGradient(gradient: Gradient(colors: [Color.white, Color(red: 0.95, green: 0.95, blue: 0.97).opacity(1), Color.white]),
+                                                 startPoint: .top,
+                                                 endPoint: .bottom))
+                            .frame(width: 2,
+                                   height: geometry.size.height)
+                            .position(x: geometry.size.width/3,
+                                      y: geometry.size.height/2)
+                            .offset(y: 0)
+                        Rectangle()
+                            .fill(LinearGradient(gradient: Gradient(colors: [Color.white, Color(red: 0.95, green: 0.95, blue: 0.97).opacity(1), Color.white]),
+                                                 startPoint: .top,
+                                                 endPoint: .bottom))
+                            .frame(width: 2, height: geometry.size.height)
+                            .position(x: geometry.size.width/3 * 2, y: 0)
+                            .offset(y: 0)
+                    }
                 )
-                .position(CGPoint(x: geometry.size.width/2 ,
-                                  y: TimelineUIConstants.positionOfWeeksZstackElements+30))
+                Text("11 Dec - 18 Dec") //TBD: calculate and update
+                    .font(Font.custom("SF Pro", size: 10))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.black)
+                    .padding([.leading, .trailing], 10)
+                    .padding([.top, .bottom], 4)
+                
+                    .background(
+                        Capsule()
+                            .fill(concreteLB)
+                            .frame(width: 100)
+                    )
+                    .position(CGPoint(x: geometry.size.width/2 ,
+                                      y: TimelineUIConstants.positionOfWeeksZstackElements+30))
+            }
         }
 //        .offset(y: 80)
     }
@@ -138,6 +144,15 @@ struct TimelineView: View {
         UIView.animate(withDuration: 0.3, animations: {
             scrollView.contentOffset = CGPoint(x: newOffset, y: 0)
         })
+    }
+    
+    func scrollToIndexWith(scrollView: UIScrollView, index: CGFloat, animated: Bool) {
+        let segmentWidth = UIScreen.main.bounds.size.width / 3
+        let newOffset = index * segmentWidth
+        currentIndex = index
+        withAnimation(.default.delay(0.3)) {
+            scrollView.setContentOffset(CGPoint(x: newOffset, y: 0), animated: animated)
+        }
     }
 
     func scrollToIndex(_ index: Int, scrollView: UIScrollView) {
