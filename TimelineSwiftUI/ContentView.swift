@@ -51,7 +51,7 @@ struct TimelineView: View {
                         Spacer()
                         HStack(spacing: 0) {
                             ForEach(0..<43, id: \.self) { week in
-                                Text("\(week)")
+                                Text(week == 0 ? "<1" : "\(week)")
                                     .font(
                                         Font.system(size: week == Int(currentIndex) ? 28 : 18)
                                             .weight(.semibold)
@@ -127,6 +127,7 @@ struct TimelineView: View {
                 .position(CGPoint(x: geometry.size.width/2 ,
                                   y: TimelineUIConstants.positionOfWeeksZstackElements+30))
         }
+//        .offset(y: 80)
     }
     
     func snapWith(scrollView: UIScrollView) {
@@ -168,7 +169,7 @@ struct PillView: View {
                 .fill(pill.color ?? Color.blue).opacity(0.12)
                 .cornerRadius(8)
                 .padding(.horizontal, 4.0)
-                .frame(width: CGFloat(Int(pill.duration ?? 0)/7) * widthPerWeek)
+                .frame(width: CGFloat(pill.duration ?? 0) * widthPerWeek)
                 .onTapGesture {
                     print("Tapped")
                 }
@@ -186,7 +187,7 @@ struct PillView: View {
             .padding(.horizontal, 10.0)
             .foregroundColor(.white)
             .fixedSize(horizontal: false, vertical: true)
-            .frame(width: (CGFloat(Int(pill.duration ?? 0)/7).rounded() * widthPerWeek))
+            .frame(width: CGFloat(pill.duration ?? 0) * widthPerWeek)
             .padding(.vertical, 10.0)
             .lineLimit(3)
     }

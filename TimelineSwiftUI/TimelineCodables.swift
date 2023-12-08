@@ -30,39 +30,35 @@ class TimelinePill: Codable, Identifiable {
     let id = UUID()
     var categoryId: String?
     var body: String?
-    var startDay: Int?
-    var duration: Int?
+    var startWeek: Int?
+    var endWeek: Int?
+    var duration: Int? {
+        (endWeek ?? 1) - (startWeek ?? 1) + 1
+    }
     var priority: Int?
     var color: Color?
-//    var color: UIColor? {
-//        guard let category = categoryId else {
-//            return nil
-//        }
-//        let cate = Categories(rawValue: category)
-//        return cate?.color
-//    }
 
     enum CodingKeys: String, CodingKey {
-        case categoryId = "CategoryId"
+        case categoryId = "Category"
         case body = "Body"
-        case startDay = "StartDay"
-        case duration = "Duration"
+        case startWeek = "StartWeek"
+        case endWeek = "EndWeek"
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         categoryId = try container.decodeIfPresent(String.self, forKey: .categoryId)
         body = try container.decodeIfPresent(String.self, forKey: .body)
-        startDay = try container.decodeIfPresent(Int.self, forKey: .startDay)
-        duration = try container.decodeIfPresent(Int.self, forKey: .duration)
+        startWeek = try container.decodeIfPresent(Int.self, forKey: .startWeek)
+        endWeek = try container.decodeIfPresent(Int.self, forKey: .endWeek)
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(categoryId, forKey: .categoryId)
         try container.encodeIfPresent(body, forKey: .body)
-        try container.encodeIfPresent(startDay, forKey: .startDay)
-        try container.encodeIfPresent(duration, forKey: .duration)
+        try container.encodeIfPresent(startWeek, forKey: .startWeek)
+        try container.encodeIfPresent(endWeek, forKey: .endWeek)
     }
 }
 

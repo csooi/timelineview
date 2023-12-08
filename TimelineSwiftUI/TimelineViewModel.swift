@@ -32,27 +32,22 @@ class TimelineViewModel: ObservableObject {
 
     func timePillForRowAndWeek(row: Int, week: Int) -> TimelinePill? {
         timePills.first { pill in
-            guard let pillRow = pillRowMapping[pill.id],
-                  let startDay = pill.startDay else {
+            let startWeek = (pill.startWeek ?? 1) - 1
+            guard let pillRow = pillRowMapping[pill.id] else {
                 return false
             }
-
-            let pillWeek = (startDay) / 7 // Calculate the week number
-            return pillRow == row && pillWeek == week
+            return pillRow == row && startWeek == week
         }
     }
     
     func isOccupying(week: Int, row: Int) -> Bool {
         return timePills.contains { pill in
+            let startWeek = (pill.startWeek ?? 1) - 1
             guard let pillRow = pillRowMapping[pill.id],
-                  let startDay = pill.startDay,
-                  let duration = pill.duration else {
+                  let endWeek = pill.endWeek else {
                 return false
             }
-
-            let pillStartWeek = startDay / 7
-            let pillEndWeek = (startDay + duration - 1) / 7
-            return pillRow == row && week >= pillStartWeek && week < pillEndWeek
+            return pillRow == row && week-1 > startWeek && week <= endWeek
         }
     }
 }
