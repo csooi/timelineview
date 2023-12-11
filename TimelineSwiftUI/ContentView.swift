@@ -4,6 +4,8 @@ import LegacyScrollView
 struct TimelineUIConstants {
     static let heightOfWeekView: CGFloat = 40
     static let positionOfWeeksZstackElements: CGFloat = TimelineUIConstants.heightOfWeekView+8
+    
+    static let topPaddingOfWeekElements: CGFloat = TimelineUIConstants.heightOfWeekView+2
 }
 
 struct TimelineView: View {
@@ -18,20 +20,18 @@ struct TimelineView: View {
     var body: some View {
         LegacyScrollViewReader { proxy in
             GeometryReader { geometry in
-                ZStack {
+                ZStack(alignment: .top) {
                     Rectangle()
                         .frame(width:geometry.size.width , height: 3)
                         .foregroundColor(Color(red: 0.95, green: 0.95, blue: 0.97))
-                        .position(CGPoint(x: geometry.size.width/2 ,
-                                          y: TimelineUIConstants.positionOfWeeksZstackElements ))
+                        .padding(.top, TimelineUIConstants.positionOfWeeksZstackElements)
                     Text("WEEKS")
                         .font(.system(size: 12.0, weight: .bold))
                         .foregroundColor(Color(bleen))
                         .background(Color.white)
-                        .position(CGPoint(x: geometry.size.width/2 ,
-                                          y: TimelineUIConstants.positionOfWeeksZstackElements))
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding([.leading, .trailing], 4)
-                    
+                        .padding(.top, TimelineUIConstants.topPaddingOfWeekElements)
                 }
                 LegacyScrollView(.horizontal, showsIndicators: false) {
                     ZStack {
