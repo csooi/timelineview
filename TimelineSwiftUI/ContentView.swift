@@ -17,19 +17,20 @@ struct TimelineView: View {
             LegacyScrollViewReader { proxy in
                 GeometryReader { geometry in
                     LegacyScrollView(.horizontal, showsIndicators: false) {
-                        ZStack {
-                            Circle().fill(Color(red: 1, green: 0.3, blue: 0.39))
+                        ZStack(alignment: .top) {
+                            Circle()
+                                .fill(Color(red: 1, green: 0.3, blue: 0.39))
                                 .frame(width: 10)
                                 .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
                                           y: 80)
                             Rectangle()
-                                .fill(Color.red)
-                                .frame(width: 2, height: geometry.size.height)
-                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek  + 1) + weekWidth(geometry.size.width)/2.0,
-                                          y: geometry.size.height - 152 - geometry.safeAreaInsets.top - geometry.safeAreaInsets.bottom)
+                              .fill(Color.red)
+                              .frame(width: 2, height: geometry.size.height/2)
+                              .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
+                                    y: (geometry.size.height)/4 + 80)
                             VStack(alignment: .leading) {
-                                Spacer().frame(height: 0)
-                                HStack(alignment: .top, spacing: 0) {
+                                Spacer().frame(height: 8)
+                                HStack(alignment: .center, spacing: 0) {
                                     ForEach(0..<43, id: \.self) { week in
                                         Text(week == 0 ? "<1" : "\(week)")
                                             .font(
@@ -43,10 +44,8 @@ struct TimelineView: View {
                                                 scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(week), animated: true)
                                             }
                                     }
-                                    
-                                    Spacer().frame(height: 80)
                                 }
-                                
+                                Spacer().frame(height: 60)
                                 LegacyScrollView(.vertical, showsIndicators: true) {
                                     ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
                                         HStack(alignment: .top, spacing: 0) {
@@ -230,6 +229,9 @@ struct TimelineView_Previews: PreviewProvider {
             .previewDevice("iPhone SE (2nd generation)")
         
         TimelineView(viewModel: TimelineViewModel())
-            .previewDevice("iPhone 14 Pro")
+            .previewDevice("iPhone 13 Pro Max")
+        
+        TimelineView(viewModel: TimelineViewModel())
+            .previewDevice("iPhone 14 Pro Max")
     }
 }
