@@ -3,6 +3,7 @@ import LegacyScrollView
 
 struct TimelineUIConstants {
     static let heightOfWeekView: CGFloat = 40
+    static let segmentOffset: CGFloat = 10
     static let positionOfWeeksZstackElements: CGFloat = TimelineUIConstants.heightOfWeekView+8
 }
 
@@ -21,12 +22,12 @@ struct TimelineView: View {
                             Circle()
                                 .fill(Color(red: 1, green: 0.3, blue: 0.39))
                                 .frame(width: 10)
-                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
+                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + 10,
                                           y: 80)
                             Rectangle()
                               .fill(Color.red)
                               .frame(width: 2, height: geometry.size.height)
-                              .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
+                              .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + 10,
                                     y: (geometry.size.height)/2 + 80)
                             VStack(alignment: .leading) {
                                 Spacer().frame(height: 8)
@@ -69,7 +70,7 @@ struct TimelineView: View {
                                     }
                                 }
                             }
-                            .padding(.horizontal, geometry.size.width/3)
+                            .padding(.horizontal, geometry.size.width/4 + 5)
                             .onAppear {
                                 scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(viewModel.currentWeek), animated: false)
                             }
@@ -88,7 +89,7 @@ struct TimelineView: View {
                                                      endPoint: .bottom))
                                 .frame(width: 2,
                                        height: geometry.size.height)
-                                .position(x: geometry.size.width/3,
+                                .position(x: geometry.size.width/4 + 5,
                                           y: geometry.size.height/2)
                                 .offset(y: 0)
                             Rectangle()
@@ -96,7 +97,7 @@ struct TimelineView: View {
                                                      startPoint: .top,
                                                      endPoint: .bottom))
                                 .frame(width: 2, height: geometry.size.height)
-                                .position(x: geometry.size.width/3 * 2, y: 0)
+                                .position(x: geometry.size.width/4 * 3 - 5, y: 0)
                                 .offset(y: 0)
                         }
                     )
@@ -104,7 +105,7 @@ struct TimelineView: View {
                         Rectangle()
                             .frame(width:geometry.size.width , height: 3)
                             .foregroundColor(Color(red: 0.95, green: 0.95, blue: 0.97))
-                            .position(CGPoint(x: geometry.size.width/2 ,
+                            .position(CGPoint(x: geometry.size.width/2,
                                               y: TimelineUIConstants.positionOfWeeksZstackElements ))
                         Text("WEEKS")
                             .font(.system(size: 12.0, weight: .bold))
@@ -139,7 +140,7 @@ struct TimelineView: View {
     }
     
     func snapWith(scrollView: UIScrollView) {
-        let segmentWidth = UIScreen.main.bounds.size.width / 3
+        let segmentWidth = UIScreen.main.bounds.size.width / 2 - 10
         let offset = scrollView.contentOffset.x
         currentIndex = round(offset / segmentWidth)
         let newOffset = currentIndex * segmentWidth
@@ -149,7 +150,7 @@ struct TimelineView: View {
     }
     
     func scrollToIndexWith(scrollView: UIScrollView, index: CGFloat, animated: Bool) {
-        let segmentWidth = UIScreen.main.bounds.size.width / 3
+        let segmentWidth = UIScreen.main.bounds.size.width / 2 - 10
         let newOffset = index * segmentWidth
         currentIndex = index
         withAnimation(.default.delay(0.3)) {
@@ -157,17 +158,9 @@ struct TimelineView: View {
         }
     }
 
-    func scrollToIndex(_ index: Int, scrollView: UIScrollView) {
-        let segmentWidth = UIScreen.main.bounds.size.width / 3
-        let newOffsetX = CGFloat(index) * segmentWidth
-        UIView.animate(withDuration: 0.3, animations: {
-            scrollView.contentOffset = CGPoint(x: newOffsetX, y: 0)
-        })
-    }
-
     func weekWidth(_ screenWidth: CGFloat) -> CGFloat {
         // Calculate the width for each week column
-        screenWidth / 3
+        screenWidth / 2  - 10
     }
     
     func maxRow(in timePills: [TimelinePill]) -> Int {
@@ -229,7 +222,7 @@ struct TimelineView_Previews: PreviewProvider {
             .previewDevice("iPhone SE (2nd generation)")
         
         TimelineView(viewModel: TimelineViewModel())
-            .previewDevice("iPhone 13 Pro Max")
+            .previewDevice("iPhone 13 Pro")
         
         TimelineView(viewModel: TimelineViewModel())
             .previewDevice("iPhone 14 Pro Max")
