@@ -25,9 +25,9 @@ struct TimelineView: View {
                                           y: 80)
                             Rectangle()
                               .fill(Color.red)
-                              .frame(width: 2, height: geometry.size.height/2)
+                              .frame(width: 2, height: geometry.size.height)
                               .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + weekWidth(geometry.size.width)/2.0,
-                                    y: (geometry.size.height)/4 + 80)
+                                    y: (geometry.size.height)/2 + 80)
                             VStack(alignment: .leading) {
                                 Spacer().frame(height: 8)
                                 HStack(alignment: .center, spacing: 0) {
