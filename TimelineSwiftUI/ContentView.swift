@@ -26,7 +26,7 @@ struct TimelineView: View {
                                 .fill(Color.red)
                                 .frame(width: 2, height: geometry.size.height)
                                 .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek  + 1) + weekWidth(geometry.size.width)/2.0,
-                                          y: 380)
+                                          y: geometry.size.height - 152 - geometry.safeAreaInsets.top - geometry.safeAreaInsets.bottom)
                             VStack(alignment: .leading) {
                                 Spacer().frame(height: 0)
                                 HStack(alignment: .top, spacing: 0) {
@@ -228,5 +228,8 @@ struct TimelineView_Previews: PreviewProvider {
     static var previews: some View {
         TimelineView(viewModel: TimelineViewModel())
             .previewDevice("iPhone SE (2nd generation)")
+        
+        TimelineView(viewModel: TimelineViewModel())
+            .previewDevice("iPhone 14 Pro")
     }
 }
