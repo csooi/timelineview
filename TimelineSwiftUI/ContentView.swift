@@ -12,6 +12,9 @@ struct TimelineView: View {
     let bleen = UIColor(red: 0, green: 0.75, blue: 0.86, alpha: 1.0)
     let bombayLB = Color(red: 0.69, green: 0.69, blue: 0.71)
     let concreteLB = Color(red: 0.95, green: 0.95, blue: 0.97)
+    @Environment(\.layoutDirection) var direction
+    let totalCount = 43
+    
     var body: some View {
         NavigationView {
             LegacyScrollViewReader { proxy in
@@ -31,7 +34,7 @@ struct TimelineView: View {
                             VStack(alignment: .leading) {
                                 Spacer().frame(height: 8)
                                 HStack(alignment: .center, spacing: 0) {
-                                    ForEach(0..<43, id: \.self) { week in
+                                    ForEach(0..<totalCount, id: \.self) { week in
                                         Text(week == 0 ? "<1" : "\(week)")
                                             .font(
                                                 Font.system(size: week == Int(currentIndex) ? 28 : 18)
@@ -49,7 +52,7 @@ struct TimelineView: View {
                                 LegacyScrollView(.vertical, showsIndicators: true) {
                                     ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
                                         HStack(alignment: .top, spacing: 0) {
-                                            ForEach(0..<43, id: \.self) { week in
+                                            ForEach(0..<totalCount, id: \.self) { week in
                                                 ZStack(alignment: .center) {
                                                     
                                                     // The week background (can be empty or styled)
@@ -141,8 +144,13 @@ struct TimelineView: View {
     func snapWith(scrollView: UIScrollView) {
         let segmentWidth = UIScreen.main.bounds.size.width / 3
         let offset = scrollView.contentOffset.x
-        currentIndex = round(offset / segmentWidth)
-        let newOffset = currentIndex * segmentWidth
+        let index = round(offset / segmentWidth)
+        let newOffset = index * segmentWidth
+        if direction == .rightToLeft {
+            currentIndex = (CGFloat(totalCount + 1) -  index)
+        } else {
+            currentIndex = index
+        }
         UIView.animate(withDuration: 0.3, animations: {
             scrollView.contentOffset = CGPoint(x: newOffset, y: 0)
         })
@@ -150,19 +158,19 @@ struct TimelineView: View {
     
     func scrollToIndexWith(scrollView: UIScrollView, index: CGFloat, animated: Bool) {
         let segmentWidth = UIScreen.main.bounds.size.width / 3
-        let newOffset = index * segmentWidth
+        var offsetIndex = index
+
+        if direction == .rightToLeft {
+            offsetIndex = (CGFloat(totalCount + 1) -  index)
+        }
+
+        let newOffset = offsetIndex * segmentWidth
+
+
         currentIndex = index
         withAnimation(.default.delay(0.3)) {
             scrollView.setContentOffset(CGPoint(x: newOffset, y: 0), animated: animated)
         }
-    }
-
-    func scrollToIndex(_ index: Int, scrollView: UIScrollView) {
-        let segmentWidth = UIScreen.main.bounds.size.width / 3
-        let newOffsetX = CGFloat(index) * segmentWidth
-        UIView.animate(withDuration: 0.3, animations: {
-            scrollView.contentOffset = CGPoint(x: newOffsetX, y: 0)
-        })
     }
 
     func weekWidth(_ screenWidth: CGFloat) -> CGFloat {
