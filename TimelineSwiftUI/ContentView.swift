@@ -64,6 +64,7 @@ struct TimelineView: View {
                                                     if let pill = viewModel.timePillForRowAndWeek(row: row, week: week) {
                                                         PillView(pill: pill,
                                                                  widthPerWeek: weekWidth(geometry.size.width))
+                                                        .frame(height: 62.0)
                                                     }
                                                     
                                                 }
@@ -207,7 +208,7 @@ struct PillView: View {
             
         }
         Text((pill.body ?? ""))
-            .font(.system(size: 16.0, weight: .medium))
+            .font(.system(size: 14.0, weight: .medium))
             .foregroundColor(pill.color ?? Color.blue)
             .padding(.horizontal, 10.0)
             .foregroundColor(.white)
