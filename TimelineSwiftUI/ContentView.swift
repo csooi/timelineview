@@ -228,64 +228,43 @@ struct PillView: View {
                 })
             
         }
-        GeometryReader { textwidth in
             Text((pill.body ?? ""))
                 .font(.system(size: 14.0, weight: .medium))
                 .foregroundColor(pill.color ?? Color.blue)
-                .padding(.horizontal, 10.0)
-                .foregroundColor(.white)
-            //.background(Color.green)
-                //.fixedSize(horizontal: false, vertical: true)
-                .frame(minWidth: 0, maxWidth: .infinity)
-                //.frame(width: widthOfText(pill: pill))
-            //alignment: pill.textAligment)
-            
-            //.animation(.linear(duration: 0.25))
-            //            .onReceive(pill.$textAligment) { aligement in
-            //                // 4
-            //                withAnimation {
-            //                    pill.textAligment = aligement
-            //                   // self.frame(alignment: aligement)
-            //                }
-            //            }
-        
                 .padding(.vertical, 10.0)
-               // .background(Color.gray)
+                .padding(.leading, pill.offset)
+                .padding(.trailing, 10.0)
+                .foregroundColor(.white)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(width: widthOfText(pill: pill))
+            //alignment: pill.textAligment)
+                .background(Color.gray)
 
                 .lineLimit(3)
+                .animation(animationText())
+
                 //.offset(x: pill.offset)
-                .background(GeometryReader { geometry in
-                                Color.gray.preference(key: ViewWidthKey.self, value: geometry.size.width)
-                            })
-                            .onPreferenceChange(ViewWidthKey.self) { width in
-                                print("WWW title - \(pill.body)")
-                                print("WWW Width of the string:", width)
-                            }
-               .position(x: pill.offset, y: (62.0/2))
-               .animation(animationText())
+               //.position(x: pill.offset, y: (62.0/2))
 //                .onAppear {
 //                    let textWidth = textwidth.size.width
 //                    //print("--> Geometry Title - \(pill.body), Text Width: \(textWidth)")
 //
 //                }
-        }
-        // .animation(.easeInOut)
-        //.position(x: 100, y: (62.0/2))
-        
     }
     
     func animationText() -> Animation? {
         if pill.startWeek == pill.endWeek {
             return nil
         }
-        return .linear
+        return .easeInOut
     }
     func widthOfText(pill: TimelinePill) -> CGFloat {
-        if pill.duration ?? 0 > 1 {
-            return UIScreen.main.bounds.size.width
-        } else {
-            return CGFloat(pill.duration ?? 0) * widthPerWeek
-        }
+//        if pill.duration ?? 0 > 1 {
+//            return UIScreen.main.bounds.size.width
+//        } else {
+//            return CGFloat(pill.duration ?? 0) * widthPerWeek
+//        }
+        CGFloat(pill.duration ?? 0) * widthPerWeek
     }
     
     func pillOffsetArea(_ pillFrame: CGRect?) -> CGFloat {

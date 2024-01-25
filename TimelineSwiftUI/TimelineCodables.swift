@@ -38,8 +38,9 @@ class TimelinePill: Codable, Identifiable, ObservableObject {
 
      var priority: Int?
      var color: Color?
+        var pillTextWidth: CGFloat?
      @Published var textAligment: Alignment = .leading
-    @Published var offset: CGFloat = UIScreen.main.bounds.size.width/2 - 10
+    @Published var offset: CGFloat = 10
     
     enum CodingKeys: String, CodingKey {
         case categoryId = "Category"

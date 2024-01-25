@@ -33,10 +33,9 @@ class TimelineViewModel: ObservableObject {
     func updateOffsetValue(_ pills: [TimelinePill], currentIndex: Int, weekWidth: CGFloat)  {
         for pill in pills {
             if let row = timePills.firstIndex(where: {$0.id == pill.id}) {
-                var offset = 0.0
+                var leadingPadding = 0.0
                 if pill.startWeek == pill.endWeek {
-                    //offset = 0.0
-                    offset = weekWidth/2
+                    leadingPadding = 10.0
                 } else {
 //                    let startWeek = pill.startWeek ?? 1
 //                    let endWeek = pill.endWeek ?? 1
@@ -74,21 +73,51 @@ class TimelineViewModel: ObservableObject {
                     print("--> start week - \(pill.startWeek)")
                     print("--> end week - \(pill.endWeek)")
                     print("--> current index - \(currentIndex)")
-                    offset = (Double((currentIndex - (pill.startWeek ?? 1 ))) * weekWidth) + weekWidth
+                  /*  offset = (Double((currentIndex - (pill.startWeek ?? 1 ))) * weekWidth) + weekWidth
                    // offset = Double((currentIndex)) * weekWidth
 
                     //handle edge case where start week is greater than current index
                     //handle if offset goes beyond pillwidth
                     let pillWidth = CGFloat(pill.duration ?? 0) * weekWidth
-                    let textWidth = UIScreen.main.bounds.size.width - 40 //assume width of text
-                    if offset+textWidth > (pillWidth) {
+                   // let textWidth = UIScreen.main.bounds.size.width - 60 //assume width of text
+                    let textWidth = pill.pillTextWidth ?? 10
+                    print("--> textWidth - \(textWidth)")
+
+                    if offset > (pillWidth-textWidth) {
                         offset = offset - textWidth
                     }
-                    print("--> offset - \(offset)")
+                    print("--> offset - \(offset)")*/
+                    
+                    let startWeek = pill.startWeek ?? 1
+                    let endWeek = pill.endWeek ?? 1
+                   // if currentIndex - startWeek < endWeek - currentIndex {
+                    //    leadingPadding = 10.0
+                   // if currentIndex == startWeek {
+                    //    leadingPadding = 10.0
+                   // } else {
+                        leadingPadding = (Double(((currentIndex - 1) - (pill.startWeek ?? 1 ))) * weekWidth) + weekWidth/2
+                        // offset = Double((currentIndex)) * weekWidth
+                        
+                        //handle edge case where start week is greater than current index
+                        //handle if offset goes beyond pillwidth
+                        let pillWidth = CGFloat(pill.duration ?? 0) * weekWidth
+                        // let textWidth = UIScreen.main.bounds.size.width - 60 //assume width of text
+                        let textWidth = pill.pillTextWidth ?? 10
+                        print("--> textWidth - \(textWidth)")
+                        print("--> pillWidth - \(pillWidth)")
+
+                       // if leadingPadding < 0 {
+                       //     leadingPadding = 10.0
+                        //} else
+                if leadingPadding > (pillWidth-textWidth) {
+                            leadingPadding = pillWidth - textWidth
+                        }
+                        print("--> offset - \(leadingPadding)")
+                   // }
 
                 }
 
-                timePills[row].offset = offset
+                timePills[row].offset = leadingPadding
             }
 
         }
@@ -156,4 +185,13 @@ extension String {
         return boundingBox.height
     }
     
+    func widthOfText() -> CGFloat {
+      //  let myString = "Hello, World!"
+           // .font(.system(size: 14.0, weight: .medium))
+        let font = UIFont.systemFont(ofSize: 14.0, weight: .medium) // Replace with your desired font
+        let size = self.size(withAttributes: [NSAttributedString.Key.font: font])
+
+        print("Width of the string:", size.width)
+        return size.width
+    }
 }

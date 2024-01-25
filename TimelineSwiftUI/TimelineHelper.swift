@@ -68,6 +68,7 @@ class TimelineHelper: NSObject {
         for i in 0...timelinePills.count-1 {
             timelinePills[i].priority = categoryMetaData.firstIndex{$0.id == timelinePills[i].categoryId} ?? 0
             timelinePills[i].color = colorForCategory(categoryId: timelinePills[i].categoryId ?? "", in: categoryMetaData) ?? Color.blue          //any other updation  which makes ui plotting easier can be added here
+            timelinePills[i].pillTextWidth = timelinePills[i].body?.widthOfText()
         }
         return timelinePills
     }
