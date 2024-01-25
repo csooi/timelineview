@@ -2,9 +2,9 @@
 
 import SwiftUI
 
-class Timeline: Codable {
+class Timeline: Codable, ObservableObject {
     var categoryMetaData: [CategoryMetadata]?
-    var timelinePills: [TimelinePill]?
+    @Published var timelinePills: [TimelinePill]?
 
     enum CodingKeys: String, CodingKey {
         case timeline = "Timeline"
@@ -26,18 +26,21 @@ class Timeline: Codable {
     }
 }
 
-class TimelinePill: Codable, Identifiable {
+class TimelinePill: Codable, Identifiable, ObservableObject {
     let id = UUID()
-    var categoryId: String?
-    var body: String?
-    var startWeek: Int?
-    var endWeek: Int?
+     var categoryId: String?
+     var body: String?
+     var startWeek: Int?
+     var endWeek: Int?
     var duration: Int? {
         (endWeek ?? 1) - (startWeek ?? 1) + 1
     }
-    var priority: Int?
-    var color: Color?
 
+     var priority: Int?
+     var color: Color?
+     @Published var textAligment: Alignment = .leading
+    @Published var offset: CGFloat = UIScreen.main.bounds.size.width/2 - 10
+    
     enum CodingKeys: String, CodingKey {
         case categoryId = "Category"
         case body = "Body"

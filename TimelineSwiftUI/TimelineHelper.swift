@@ -49,20 +49,25 @@ class TimelineHelper: NSObject {
     }
     
     func fillTimelinePillMetaDataAndSort(timeline: Timeline) -> [TimelinePill] {
-        guard let timelinePills = timeline.timelinePills,
+        guard var timelinePills = timeline.timelinePills,
                 let categoryMetadata = timeline.categoryMetaData else {
             return []
         }
-        let filledTimelinePills = fillPillCategoryMetadata(timelinePills: timelinePills,
+        let filledTimelinePills = fillPillCategoryMetadata(timelinePills: &timelinePills,
                                                            categoryMetaData: categoryMetadata)
         return sort(timeline: filledTimelinePills)
     }
     
-    private func fillPillCategoryMetadata(timelinePills: [TimelinePill],
+    private func fillPillCategoryMetadata(timelinePills: inout [TimelinePill],
                                             categoryMetaData: [CategoryMetadata]) -> [TimelinePill] {
-        for timelinePill in timelinePills {
-            timelinePill.priority = categoryMetaData.firstIndex{$0.id == timelinePill.categoryId} ?? 0
-            timelinePill.color = colorForCategory(categoryId: timelinePill.categoryId ?? "", in: categoryMetaData) ?? Color.blue          //any other updation  which makes ui plotting easier can be added here
+       // var pills = timelinePills
+//        for timelinePill in timelinePills {
+//            timelinePill.priority = categoryMetaData.firstIndex{$0.id == timelinePill.categoryId} ?? 0
+//            timelinePill.color = colorForCategory(categoryId: timelinePill.categoryId ?? "", in: categoryMetaData) ?? Color.blue          //any other updation  which makes ui plotting easier can be added here
+//        }
+        for i in 0...timelinePills.count-1 {
+            timelinePills[i].priority = categoryMetaData.firstIndex{$0.id == timelinePills[i].categoryId} ?? 0
+            timelinePills[i].color = colorForCategory(categoryId: timelinePills[i].categoryId ?? "", in: categoryMetaData) ?? Color.blue          //any other updation  which makes ui plotting easier can be added here
         }
         return timelinePills
     }
