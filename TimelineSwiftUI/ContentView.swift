@@ -68,7 +68,7 @@ struct TimelineView: View {
                                     ForEach(0..<maxRow(in: viewModel.timePills), id: \.self) { row in
                                         HStack(alignment: .top, spacing: 0) {
                                             ForEach(0..<totalCount, id: \.self) { week in
-                                                ZStack(alignment: .center) {
+                                                ZStack(alignment: .leading) {
                                                     
                                                     // The week background (can be empty or styled)
                                                     Rectangle()
@@ -97,6 +97,10 @@ struct TimelineView: View {
                     .onEndDragging { scrollView in
                         snapWith(scrollView: scrollView)
                        // updateTextAlignment()
+//                        if let pills = scrollView.subviews as? PillView {
+//
+//                        }
+//                        scrollView.visibleRect.
                     }.onEndDecelerating { scrollView in
                         snapWith(scrollView: scrollView)
                         //updateTextAlignment()
@@ -159,7 +163,7 @@ struct TimelineView: View {
             //        .offset(y: 80)
         }
     }
-    
+
     func snapWith(scrollView: UIScrollView) {
         let segmentWidth = UIScreen.main.bounds.size.width / 2 - 10
         let offset = scrollView.contentOffset.x
@@ -232,38 +236,36 @@ struct PillView: View {
                 .font(.system(size: 14.0, weight: .medium))
                 .foregroundColor(pill.color ?? Color.blue)
                 .padding(.vertical, 10.0)
-                .padding(.leading, pill.offset)
+                .padding(.leading, xPosition())
+                .animation(animationText())
                 .padding(.trailing, 10.0)
                 .foregroundColor(.white)
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(width: widthOfText(pill: pill))
-            //alignment: pill.textAligment)
-                .background(Color.gray)
-
+                .frame(width: widthOfText(pill: pill), alignment: alignmentC())
+                //.background(Color.gray)
                 .lineLimit(3)
-                .animation(animationText())
-
-                //.offset(x: pill.offset)
-               //.position(x: pill.offset, y: (62.0/2))
-//                .onAppear {
-//                    let textWidth = textwidth.size.width
-//                    //print("--> Geometry Title - \(pill.body), Text Width: \(textWidth)")
-//
-//                }
+    }
+    
+    func alignmentC() -> Alignment {
+        if pill.startWeek == pill.endWeek {
+            return .center
+        }
+        return .leading
+    }
+    func xPosition() -> CGFloat {
+//        if pill.startWeek == pill.endWeek {
+//            return widthPerWeek/2.0
+//        }
+        return pill.leadingPadding
     }
     
     func animationText() -> Animation? {
         if pill.startWeek == pill.endWeek {
             return nil
         }
-        return .easeInOut
+        return .linear
     }
     func widthOfText(pill: TimelinePill) -> CGFloat {
-//        if pill.duration ?? 0 > 1 {
-//            return UIScreen.main.bounds.size.width
-//        } else {
-//            return CGFloat(pill.duration ?? 0) * widthPerWeek
-//        }
         CGFloat(pill.duration ?? 0) * widthPerWeek
     }
     

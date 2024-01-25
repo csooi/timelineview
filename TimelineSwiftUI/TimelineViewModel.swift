@@ -90,34 +90,26 @@ class TimelineViewModel: ObservableObject {
                     
                     let startWeek = pill.startWeek ?? 1
                     let endWeek = pill.endWeek ?? 1
-                   // if currentIndex - startWeek < endWeek - currentIndex {
-                    //    leadingPadding = 10.0
-                   // if currentIndex == startWeek {
-                    //    leadingPadding = 10.0
-                   // } else {
-                        leadingPadding = (Double(((currentIndex - 1) - (pill.startWeek ?? 1 ))) * weekWidth) + weekWidth/2
-                        // offset = Double((currentIndex)) * weekWidth
+                        leadingPadding = (Double(((currentIndex) - (pill.startWeek ?? 1 ))) * weekWidth)
                         
                         //handle edge case where start week is greater than current index
                         //handle if offset goes beyond pillwidth
                         let pillWidth = CGFloat(pill.duration ?? 0) * weekWidth
-                        // let textWidth = UIScreen.main.bounds.size.width - 60 //assume width of text
+                    
                         let textWidth = pill.pillTextWidth ?? 10
-                        print("--> textWidth - \(textWidth)")
                         print("--> pillWidth - \(pillWidth)")
 
-                       // if leadingPadding < 0 {
-                       //     leadingPadding = 10.0
-                        //} else
-                if leadingPadding > (pillWidth-textWidth) {
+                        print("--> textWidth - \(textWidth)")
+
+                        if leadingPadding <= 0 {
+                            leadingPadding = 10.0
+                        } else if leadingPadding > (pillWidth-textWidth) {
                             leadingPadding = pillWidth - textWidth
                         }
-                        print("--> offset - \(leadingPadding)")
-                   // }
-
+                        print("--> leadingPadding - \(leadingPadding)")
                 }
 
-                timePills[row].offset = leadingPadding
+                timePills[row].leadingPadding = leadingPadding
             }
 
         }
