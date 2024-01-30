@@ -8,7 +8,7 @@ class TimelineViewModel: ObservableObject {
     private var pillRowMapping: [UUID: Int] = [:]
 
     var currentWeek: Int = 12
-    
+
     init() {
         loadTimeline()
         calculateRows(for: timePills, withPriority: categoryMetaData)
@@ -30,7 +30,7 @@ class TimelineViewModel: ObservableObject {
             }
         }
     }
-    
+
     func updateOffsetValue(_ pills: [TimelinePill], currentIndex: Int, weekWidth: CGFloat)  {
         for pill in pills {
             if let row = timePills.firstIndex(where: {$0.id == pill.id}) {
@@ -38,42 +38,42 @@ class TimelineViewModel: ObservableObject {
                 if pill.startWeek == pill.endWeek {
                     leadingPadding = 10.0
                 } else {
+
+                    let startWeek = pill.startWeek ?? 1
+                    let endWeek = pill.endWeek ?? 1
                     print("--> Title - \(pill.body)")
                     print("--> start week - \(pill.startWeek)")
                     print("--> end week - \(pill.endWeek)")
-                    print("--> current index - \(currentIndex)")
-    
-                    let startWeek = pill.startWeek ?? 1
-                    let endWeek = pill.endWeek ?? 1
+                    print("--> current week - \(currentIndex)")
                     
                     let textWidth = pill.pillTextWidth ?? 10
-
                     let pillWidth = (CGFloat(pill.duration ?? 0) * weekWidth)
-                
-                        leadingPadding = (Double(((currentIndex) - (pill.startWeek ?? 1 ))) * weekWidth)
-                        
-                        //handle edge case where start week is greater than current index
-                        //handle if offset goes beyond pillwidth
-                      
-                        print("--> pillWidth - \(pillWidth)")
+                    print("--> pillWidth - \(pillWidth)")
+                    print("--> textWidth - \(textWidth)")
 
-                        print("--> textWidth - \(textWidth)")
-
-                        if leadingPadding <= 0 {
-                            leadingPadding = 20.0
-                        } else if leadingPadding > (pillWidth-textWidth - 40) {
-                            leadingPadding = pillWidth - textWidth - 40
-                        }
-                        print("--> leadingPadding - \(leadingPadding)")
+                    leadingPadding = (Double(((currentIndex) - (pill.startWeek ?? 1 ))) * weekWidth)
+                    
+                    
+                    if textWidth < weekWidth {
+                        leadingPadding = leadingPadding + (weekWidth - textWidth)/2 - 20
+                    } else if textWidth > weekWidth {
+                        leadingPadding = leadingPadding - (textWidth - weekWidth)/2 - 20
+                    }
+                    
+                    //handle the edge cases
+                    if leadingPadding < 20.0 {
+                        leadingPadding = 20.0
+                    } else if leadingPadding > (pillWidth-textWidth - 40) {
+                        leadingPadding = pillWidth - textWidth - 40
+                    }
+                    print("--> leadingPadding - \(leadingPadding)")
                 }
-
+                
                 timePills[row].leadingPadding = leadingPadding
             }
-
         }
-       
     }
-
+    
     private func loadTimeline() {
         guard let timeline = TimelineHelper().loadTimelineJSON() else {
             return
@@ -89,8 +89,7 @@ class TimelineViewModel: ObservableObject {
             print("Pill \(pill.body ?? "") assigned to row \(row) from week \(pill.startWeek!) to \(pill.endWeek!)")
         }
     }
-
-
+    
     func timePillForRowAndWeek(row: Int, week: Int) -> Int? {
         timePills.firstIndex { pill in
             let startWeek = (pill.startWeek ?? 1) - 1
@@ -100,16 +99,16 @@ class TimelineViewModel: ObservableObject {
             return pillRow == row && startWeek == week
         }
     }
-    
-//    func timePillForRowAndWeek(row: Int, week: Int) -> TimelinePill? {
-//        timePills.first { pill in
-//            let startWeek = (pill.startWeek ?? 1) - 1
-//            guard let pillRow = pillRowMapping[pill.id] else {
-//                return false
-//            }
-//            return pillRow == row && startWeek == week
-//        }
-//    }
+
+    //    func timePillForRowAndWeek(row: Int, week: Int) -> TimelinePill? {
+    //        timePills.first { pill in
+    //            let startWeek = (pill.startWeek ?? 1) - 1
+    //            guard let pillRow = pillRowMapping[pill.id] else {
+    //                return false
+    //            }
+    //            return pillRow == row && startWeek == week
+    //        }
+    //    }
     func isOccupying(week: Int, row: Int) -> Bool {
         return timePills.contains { pill in
             let startWeek = (pill.startWeek ?? 1) - 1
@@ -136,12 +135,9 @@ extension String {
     }
     
     func widthOfText() -> CGFloat {
-      //  let myString = "Hello, World!"
-           // .font(.system(size: 14.0, weight: .medium))
-        let font = UIFont.systemFont(ofSize: 14.0, weight: .medium) // Replace with your desired font
+        let font = UIFont.systemFont(ofSize: 14.0, weight: .medium) // we can pass the font here
+        //this font sytle should be same as pill text font
         let size = self.size(withAttributes: [NSAttributedString.Key.font: font])
-
-        print("Width of the string:", size.width)
         return size.width
     }
 }
