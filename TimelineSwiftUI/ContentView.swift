@@ -212,6 +212,10 @@ struct PillView: View {
     @Binding var pill: TimelinePill
     @State var widthPerWeek: CGFloat
     @State private var pillGeometries: [UUID: CGRect] = [:]
+    @State var padding: CGFloat = 20
+    
+    @State private var isScrolling = false
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -236,12 +240,18 @@ struct PillView: View {
                 .font(.system(size: 14.0, weight: .medium))
                 .foregroundColor(pill.color ?? Color.blue)
                 .padding(.vertical, 10.0)
-                .padding(.leading, xPosition())
-                .animation(animationText())
+                .padding(.leading, padding)
+                .opacity(isScrolling ? 0.4 : 1.0)
+                .onChange(of: pill.leadingPadding, perform: { newValue in
+                    withAnimation {
+                        self.padding = xPosition()
+                    }
+                })
+               // .animation(animationText())
                 .padding(.trailing, 10.0)
                 .foregroundColor(.white)
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(width: widthOfText(pill: pill)-40, alignment: alignmentC())
+                .frame(width: widthOfText(pill: pill)-30, alignment: alignmentC())
                // .background(Color.gray)
                 .lineLimit(3)
             
@@ -249,6 +259,7 @@ struct PillView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 8, height: 14)
+                .padding(.trailing, 10.0)
                 .foregroundColor(pill.color ?? .gray)
         }
         .frame(width: widthOfText(pill: pill))

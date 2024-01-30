@@ -55,16 +55,16 @@ class TimelineViewModel: ObservableObject {
                     
                     
                     if textWidth < weekWidth {
-                        leadingPadding = leadingPadding + (weekWidth - textWidth)/2 - 20
+                        leadingPadding = leadingPadding + (weekWidth - textWidth)/2
                     } else if textWidth > weekWidth {
-                        leadingPadding = leadingPadding - (textWidth - weekWidth)/2 - 20
+                        leadingPadding = leadingPadding - (textWidth - weekWidth)/2
                     }
                     
                     //handle the edge cases
                     if leadingPadding < 20.0 {
                         leadingPadding = 20.0
-                    } else if leadingPadding > (pillWidth-textWidth - 40) {
-                        leadingPadding = pillWidth - textWidth - 40
+                    } else if leadingPadding > (pillWidth-textWidth - 30) {
+                        leadingPadding = pillWidth - textWidth - 30
                     }
                     print("--> leadingPadding - \(leadingPadding)")
                 }
