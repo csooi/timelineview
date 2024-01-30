@@ -100,7 +100,6 @@ extension TimelineHelper {
         // Sort all pills including the target pill by priority
         let sortedPills = (pills + [targetPill]).sorted(by: {
             $0.priority ?? 0 < $1.priority ?? 0
-            //priorityIndex(for: $1.categoryId, priorityCategories: priorityCategories)
         })
 
         for pill in sortedPills {
@@ -112,13 +111,15 @@ extension TimelineHelper {
             if pill.id == targetPill.id {
                 // Find the lowest unoccupied row for the target pill
                 var targetRow = 0
-                for week in startWeek..<endWeek {
-                    targetRow = max(targetRow, findNextAvailableRow(in: occupiedRowsByWeek, forWeek: week))
+                for _ in startWeek..<endWeek {
+                    // Find the lowest unoccupied row across all weeks the pill spans
+                    let rowForWeek = findLowestUnoccupiedRowAcrossWeeks(in: occupiedRowsByWeek, startWeek: startWeek, endWeek: endWeek)
+                    targetRow = max(targetRow, rowForWeek)
                 }
                 return targetRow
             } else {
-                // Populate occupied rows for other pills
-                let row = findNextAvailableRow(in: occupiedRowsByWeek, forWeek: startWeek)
+                // Populate occupied rows for other pills considering all weeks they span
+                let row = findLowestUnoccupiedRowAcrossWeeks(in: occupiedRowsByWeek, startWeek: startWeek, endWeek: endWeek)
                 for week in startWeek..<endWeek {
                     occupiedRowsByWeek[week, default: []].append(row)
                 }
@@ -127,12 +128,21 @@ extension TimelineHelper {
         return 0
     }
     
-    private static func findNextAvailableRow(in occupiedRowsByWeek: [Int: [Int]], forWeek week: Int) -> Int {
-        let occupiedRows = occupiedRowsByWeek[week, default: []]
+    private static func findLowestUnoccupiedRowAcrossWeeks(in occupiedRowsByWeek: [Int: [Int]], startWeek: Int, endWeek: Int) -> Int {
         var row = 0
-        while occupiedRows.contains(row) {
-            row += 1
+        var isRowOccupiedInAnyWeek = true
+        
+        while isRowOccupiedInAnyWeek {
+            isRowOccupiedInAnyWeek = false
+            for week in startWeek..<endWeek {
+                if occupiedRowsByWeek[week, default: []].contains(row) {
+                    isRowOccupiedInAnyWeek = true
+                    row += 1
+                    break
+                }
+            }
         }
+        
         return row
     }
 }
