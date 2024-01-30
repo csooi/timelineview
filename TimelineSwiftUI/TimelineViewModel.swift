@@ -6,8 +6,9 @@ class TimelineViewModel: ObservableObject {
     @Published var timePills: [TimelinePill] = []
     var categoryMetaData: [CategoryMetadata] = []
     private var pillRowMapping: [UUID: Int] = [:]
-    var currentWeek: Int = 4
 
+    var currentWeek: Int = 12
+    
     init() {
         loadTimeline()
         calculateRows(for: timePills, withPriority: categoryMetaData)
@@ -85,7 +86,7 @@ class TimelineViewModel: ObservableObject {
         for pill in pills {
             let row = TimelineHelper.determineRow(for: pill, in: pills, withPriority: priorityCategories)
             pillRowMapping[pill.id] = row
-            print("Pill \(pill.body ?? "") assigned to row \(row)")
+            print("Pill \(pill.body ?? "") assigned to row \(row) from week \(pill.startWeek!) to \(pill.endWeek!)")
         }
     }
 

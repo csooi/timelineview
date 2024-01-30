@@ -43,9 +43,9 @@ struct TimelineView: View {
                                           y: 80)
                             Rectangle()
                                 .fill(Color.red)
-                                .frame(width: 2, height: geometry.size.height)
-                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + 10,
-                                          y: (geometry.size.height)/2 + 80)
+                              .frame(width: 2, height: geometry.size.height)
+                              .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1),
+                                    y: (geometry.size.height)/2 + 80)
                             VStack(alignment: .leading) {
                                 Spacer().frame(height: 8)
                                 HStack(alignment: .center, spacing: 0) {
@@ -120,7 +120,7 @@ struct TimelineView: View {
                                                      startPoint: .top,
                                                      endPoint: .bottom))
                                 .frame(width: 2, height: geometry.size.height)
-                                .position(x: geometry.size.width/4 * 3 - 5, y: 0)
+                                .position(x: (geometry.size.width/4 * 3) + 5, y: 0)
                                 .offset(y: 0)
                         }
                     )
@@ -163,7 +163,7 @@ struct TimelineView: View {
     }
 
     func snapWith(scrollView: UIScrollView) {
-        let segmentWidth = UIScreen.main.bounds.size.width / 2 - 10
+        let segmentWidth = UIScreen.main.bounds.size.width / 2
         let offset = scrollView.contentOffset.x
         let index = round(offset / segmentWidth)
         let newOffset = index * segmentWidth
@@ -181,7 +181,7 @@ struct TimelineView: View {
     }
     
     func scrollToIndexWith(scrollView: UIScrollView, index: CGFloat, animated: Bool) {
-        let segmentWidth = UIScreen.main.bounds.size.width / 2 - 10
+        let segmentWidth = UIScreen.main.bounds.size.width / 2
         var offsetIndex = index
         
         if direction == .rightToLeft {
@@ -199,7 +199,7 @@ struct TimelineView: View {
     
     func weekWidth(_ screenWidth: CGFloat) -> CGFloat {
         // Calculate the width for each week column
-        screenWidth / 2  - 10
+        screenWidth / 2
     }
     
     func maxRow(in timePills: [TimelinePill]) -> Int {
@@ -224,6 +224,7 @@ struct PillView: View {
                 }
                 .background(GeometryReader { geometry in
                     Color.white
+                        .padding(.horizontal, 4.0)
                         .onChange(of: geometry.frame(in: .global)) { newFrame in
                             pillGeometries[pill.id] = newFrame
                         }
