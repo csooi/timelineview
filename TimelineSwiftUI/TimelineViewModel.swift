@@ -37,74 +37,31 @@ class TimelineViewModel: ObservableObject {
                 if pill.startWeek == pill.endWeek {
                     leadingPadding = 10.0
                 } else {
-//                    let startWeek = pill.startWeek ?? 1
-//                    let endWeek = pill.endWeek ?? 1
-//                    let midpoint = (endWeek - startWeek)/2
-//                    if currentIndex - startWeek < endWeek - currentIndex {
-//                        print("--> Pill is towards begining ")
-//                        print("--> current index - \(currentIndex)")
-//                        print("--> Title - \(pill.body)")
-//                        print("--> start week - \(pill.startWeek)")
-//                        print("--> end week - \(pill.endWeek)")
-//                        print("--> screen width - \(UIScreen.main.bounds.size.width-40.0)")
-//
-//                        print("--> midpoint  - \(midpoint)")
-//
-//                        offset = (Double((currentIndex - midpoint)) * (UIScreen.main.bounds.size.width - 40.0)) //assume for now width of text to be this much UIScreen.main.bounds.size.width - 40.0
-//                        print("--> offset - \(offset)")
-//
-//                    } else if  currentIndex - startWeek == endWeek - currentIndex {
-//                        offset = 0.0
-//                    }
-//                    else {
-//                        //offset =  (Double((endWeek - currentIndex)) * (UIScreen.main.bounds.size.width - 40.0))/2 ///week width
-//                        offset = (Double((currentIndex - midpoint)) * (UIScreen.main.bounds.size.width - 40.0))
-//                        print("--> Pill is towards end ")
-//                        print("--> midpoint  - \(midpoint)")
-//                        print("--> current index - \(currentIndex)")
-//                        print("--> Title - \(pill.body)")
-//                        print("--> start week - \(pill.startWeek)")
-//                        print("--> end week - \(pill.endWeek)")
-//                        print("--> offset - \(offset)")
-//
-//                    }
-//
                     print("--> Title - \(pill.body)")
                     print("--> start week - \(pill.startWeek)")
                     print("--> end week - \(pill.endWeek)")
                     print("--> current index - \(currentIndex)")
-                  /*  offset = (Double((currentIndex - (pill.startWeek ?? 1 ))) * weekWidth) + weekWidth
-                   // offset = Double((currentIndex)) * weekWidth
-
-                    //handle edge case where start week is greater than current index
-                    //handle if offset goes beyond pillwidth
-                    let pillWidth = CGFloat(pill.duration ?? 0) * weekWidth
-                   // let textWidth = UIScreen.main.bounds.size.width - 60 //assume width of text
-                    let textWidth = pill.pillTextWidth ?? 10
-                    print("--> textWidth - \(textWidth)")
-
-                    if offset > (pillWidth-textWidth) {
-                        offset = offset - textWidth
-                    }
-                    print("--> offset - \(offset)")*/
-                    
+    
                     let startWeek = pill.startWeek ?? 1
                     let endWeek = pill.endWeek ?? 1
+                    
+                    let textWidth = pill.pillTextWidth ?? 10
+
+                    let pillWidth = (CGFloat(pill.duration ?? 0) * weekWidth)
+                
                         leadingPadding = (Double(((currentIndex) - (pill.startWeek ?? 1 ))) * weekWidth)
                         
                         //handle edge case where start week is greater than current index
                         //handle if offset goes beyond pillwidth
-                        let pillWidth = CGFloat(pill.duration ?? 0) * weekWidth
-                    
-                        let textWidth = pill.pillTextWidth ?? 10
+                      
                         print("--> pillWidth - \(pillWidth)")
 
                         print("--> textWidth - \(textWidth)")
 
                         if leadingPadding <= 0 {
-                            leadingPadding = 10.0
-                        } else if leadingPadding > (pillWidth-textWidth) {
-                            leadingPadding = pillWidth - textWidth
+                            leadingPadding = 20.0
+                        } else if leadingPadding > (pillWidth-textWidth - 40) {
+                            leadingPadding = pillWidth - textWidth - 40
                         }
                         print("--> leadingPadding - \(leadingPadding)")
                 }

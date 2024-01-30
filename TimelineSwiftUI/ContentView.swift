@@ -60,6 +60,7 @@ struct TimelineView: View {
                                             .foregroundColor(week == Int(currentIndex) ? Color(bleen) : bombayLB)
                                             .onTapGesture {
                                                 scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(week), animated: true)
+                                                updateTextAlignment()
                                             }
                                     }
                                 }
@@ -91,16 +92,13 @@ struct TimelineView: View {
                             .padding(.horizontal, geometry.size.width/4 + 5)
                             .onAppear {
                                 scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(viewModel.currentWeek), animated: false)
+                                updateTextAlignment()
                             }
                         }
                     }
                     .onEndDragging { scrollView in
                         snapWith(scrollView: scrollView)
                        // updateTextAlignment()
-//                        if let pills = scrollView.subviews as? PillView {
-//
-//                        }
-//                        scrollView.visibleRect.
                     }.onEndDecelerating { scrollView in
                         snapWith(scrollView: scrollView)
                         //updateTextAlignment()
@@ -177,7 +175,7 @@ struct TimelineView: View {
         
         updateTextAlignment()
 
-        UIView.animate(withDuration: 0.4, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             scrollView.contentOffset = CGPoint(x: newOffset, y: 0)
         })
     }
@@ -232,6 +230,7 @@ struct PillView: View {
                 })
             
         }
+        HStack {
             Text((pill.body ?? ""))
                 .font(.system(size: 14.0, weight: .medium))
                 .foregroundColor(pill.color ?? Color.blue)
@@ -241,9 +240,18 @@ struct PillView: View {
                 .padding(.trailing, 10.0)
                 .foregroundColor(.white)
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(width: widthOfText(pill: pill), alignment: alignmentC())
-                //.background(Color.gray)
+                .frame(width: widthOfText(pill: pill)-40, alignment: alignmentC())
+               // .background(Color.gray)
                 .lineLimit(3)
+            
+            Image(systemName: "chevron.right")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 8, height: 14)
+                .foregroundColor(pill.color ?? .gray)
+        }
+        .frame(width: widthOfText(pill: pill))
+        //.background(Color.green)
     }
     
     func alignmentC() -> Alignment {
