@@ -25,7 +25,7 @@ struct TimelineView: View {
                             Circle()
                                 .fill(Color(red: 1, green: 0.3, blue: 0.39))
                                 .frame(width: 10)
-                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1) + 10,
+                                .position(x: weekWidth(geometry.size.width) * CGFloat(viewModel.currentWeek + 1),
                                           y: 80)
                             Rectangle()
                               .fill(Color.red)
@@ -136,7 +136,7 @@ struct TimelineView: View {
                                           y: TimelineUIConstants.positionOfWeeksZstackElements+30))
                 }
             }
-            .ignoresSafeArea()
+//            .ignoresSafeArea()
             .navigationBarTitle("Timeline")
             .navigationBarTitleDisplayMode(.inline)
     //        .offset(y: 80)
