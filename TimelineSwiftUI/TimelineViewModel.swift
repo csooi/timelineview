@@ -51,7 +51,7 @@ class TimelineViewModel: ObservableObject {
 //                    print("--> pillWidth - \(pillWidth)")
 //                    print("--> textWidth - \(textWidth)")
 
-                    leadingPadding = (Double(((currentIndex) - (pill.startWeek ?? 1 ))) * weekWidth)
+                    leadingPadding = (Double(((currentIndex) - (startWeek))) * weekWidth)
                     
                     
                     if textWidth < weekWidth {
