@@ -41,15 +41,15 @@ class TimelineViewModel: ObservableObject {
 
                     let startWeek = pill.startWeek ?? 1
                     let endWeek = pill.endWeek ?? 1
-                    print("--> Title - \(pill.body)")
-                    print("--> start week - \(pill.startWeek)")
-                    print("--> end week - \(pill.endWeek)")
-                    print("--> current week - \(currentIndex)")
+//                    print("--> Title - \(pill.body)")
+//                    print("--> start week - \(pill.startWeek)")
+//                    print("--> end week - \(pill.endWeek)")
+//                    print("--> current week - \(currentIndex)")
                     
                     let textWidth = pill.pillTextWidth ?? 10
                     let pillWidth = (CGFloat(pill.duration ?? 0) * weekWidth)
-                    print("--> pillWidth - \(pillWidth)")
-                    print("--> textWidth - \(textWidth)")
+//                    print("--> pillWidth - \(pillWidth)")
+//                    print("--> textWidth - \(textWidth)")
 
                     leadingPadding = (Double(((currentIndex) - (pill.startWeek ?? 1 ))) * weekWidth)
                     
@@ -66,7 +66,7 @@ class TimelineViewModel: ObservableObject {
                     } else if leadingPadding > (pillWidth-textWidth - 30) {
                         leadingPadding = pillWidth - textWidth - 30
                     }
-                    print("--> leadingPadding - \(leadingPadding)")
+                   // print("--> leadingPadding - \(leadingPadding)")
                 }
                 
                 timePills[row].leadingPadding = leadingPadding

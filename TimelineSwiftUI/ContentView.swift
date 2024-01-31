@@ -79,7 +79,7 @@ struct TimelineView: View {
                                                                                              row: row)) ? 0.0 : weekWidth(geometry.size.width))
                                                     // Overlay TimePill if it exists for this week and row
                                                     if let index = viewModel.timePillForRowAndWeek(row: row, week: week) {
-                                                        PillView(pill: $viewModel.timePills[index],
+                                                        PillView(currentWeek: $currentIndex, pill: $viewModel.timePills[index],
                                                                  isScrolling: $isScrolling,
                                                                  widthPerWeek: weekWidth(geometry.size.width))
                                                         .frame(height: 62.0)
@@ -218,6 +218,7 @@ struct TimelineView: View {
 }
 
 struct PillView: View {
+    @Binding var currentWeek: CGFloat
     @Binding var pill: TimelinePill
     @Binding var isScrolling: Bool
 
@@ -249,7 +250,7 @@ struct PillView: View {
                 })
             
         }
-        HStack {
+        HStack(spacing: 0.0) {
             Text((pill.body ?? ""))
                 .font(.system(size: 14.0, weight: .medium))
                 .foregroundColor(pill.color ?? Color.blue)
@@ -268,7 +269,6 @@ struct PillView: View {
                 })
                 //.animation(animationText())
                 .padding(.trailing, 10.0)
-                .foregroundColor(.white)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(width: widthOfText(pill: pill)-30, alignment: alignmentC())
                // .background(Color.gray)
@@ -288,6 +288,14 @@ struct PillView: View {
     func alignmentC() -> Alignment {
         if pill.startWeek == pill.endWeek {
             return .center
+        }
+//        print("--> title - \(pill.body)")
+//        print("--> startWeek - \(pill.startWeek)")
+//        print("--> endWeek - \(pill.endWeek)")
+//        print("--> currentWeek - \(currentWeek)")
+
+        if pill.endWeek == Int(currentWeek+1) || pill.endWeek == Int(currentWeek-1) || pill.endWeek == Int(currentWeek) {
+            return .trailing
         }
         return .leading
     }
