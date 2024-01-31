@@ -62,6 +62,10 @@ struct TimelineView: View {
                                             .onTapGesture {
                                                 scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(week), animated: true)
                                                 updateTextAlignment()
+                                                //Should find a better way to update the state of isscrolling
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                    isScrolling = false
+                                                }
                                             }
                                     }
                                 }
@@ -256,6 +260,9 @@ struct PillView: View {
                 .foregroundColor(pill.color ?? Color.blue)
                 .padding(.vertical, 10.0)
                 .padding(.leading, padding)
+                .padding(.trailing, 10.0)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(width: widthOfPill()-30, alignment: alignmentC())
                 .opacity(alpha)
                 .onChange(of: pill.leadingPadding, perform: { newValue in
                     withAnimation(.easeIn(duration: 0.3)) {
@@ -268,9 +275,7 @@ struct PillView: View {
                     }
                 })
                 //.animation(animationText())
-                .padding(.trailing, 10.0)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(width: widthOfText(pill: pill)-30, alignment: alignmentC())
+                
                // .background(Color.gray)
                 .lineLimit(3)
             
@@ -281,10 +286,19 @@ struct PillView: View {
                 .padding(.trailing, 10.0)
                 .foregroundColor(pill.color ?? .gray)
         }
-        .frame(width: widthOfText(pill: pill))
+        .frame(width: widthOfPill())
         //.background(Color.green)
     }
     
+    func widthOfText() -> CGFloat {
+        if isSingleWeekWidthPill {
+            return CGFloat(pill.duration ?? 0) * widthPerWeek - 30
+        }
+        if pill.pillTextWidth ?? 0 > UIScreen.main.bounds.size.width - 40 {
+            return UIScreen.main.bounds.size.width - 40 - 30
+        }
+        return (pill.pillTextWidth ?? 0) + 30 //here 20 is lead, trail padding and 30 is arrow width
+    }
     func alignmentC() -> Alignment {
         if pill.startWeek == pill.endWeek {
             return .center
@@ -312,7 +326,7 @@ struct PillView: View {
         }
         return .easeIn(duration: 0.3)
     }
-    func widthOfText(pill: TimelinePill) -> CGFloat {
+    func widthOfPill() -> CGFloat {
         CGFloat(pill.duration ?? 0) * widthPerWeek
     }
     
