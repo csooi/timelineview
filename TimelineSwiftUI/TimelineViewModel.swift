@@ -36,23 +36,28 @@ class TimelineViewModel: ObservableObject {
             if let row = timePills.firstIndex(where: {$0.id == pill.id}) {
                 var leadingPadding = 0.0
                 if pill.startWeek == pill.endWeek {
-                    leadingPadding = 10.0
+                    leadingPadding = 0.0
                 } else {
 
                     let startWeek = pill.startWeek ?? 1
                     let endWeek = pill.endWeek ?? 1
-//                    print("--> Title - \(pill.body)")
-//                    print("--> start week - \(pill.startWeek)")
-//                    print("--> end week - \(pill.endWeek)")
-//                    print("--> current week - \(currentIndex)")
+                    print("--> Title - \(pill.body)")
+                    print("--> start week - \(pill.startWeek)")
+                    print("--> end week - \(pill.endWeek)")
+                    print("--> current week - \(currentIndex)")
                     
-                    let textWidth = pill.pillTextWidth ?? 10
+                    var textWidth = pill.pillTextWidth ?? 10
                     let pillWidth = (CGFloat(pill.duration ?? 0) * weekWidth)
-//                    print("--> pillWidth - \(pillWidth)")
-//                    print("--> textWidth - \(textWidth)")
+                    print("--> pillWidth - \(pillWidth)")
+                    print("--> textWidth - \(textWidth)")
+                    print("--> weekWidth - \(weekWidth)")
 
                     leadingPadding = (Double(((currentIndex) - (startWeek))) * weekWidth)
                     
+//
+//                    if startWeek == currentIndex {
+//                        textWidth = UIScreen.main.bounds.size.width/2
+//                    }
                     
                     if textWidth < weekWidth {
                         leadingPadding = leadingPadding + (weekWidth - textWidth)/2
@@ -60,13 +65,14 @@ class TimelineViewModel: ObservableObject {
                         leadingPadding = leadingPadding - (textWidth - weekWidth)/2
                     }
                     
-                    //handle the edge cases
-                    if leadingPadding < 20.0 {
-                        leadingPadding = 20.0
+                    //adjust trailing space of 
+//                    //handle the edge cases
+                    if leadingPadding < 0 {
+                        leadingPadding = 0
                     } else if leadingPadding > (pillWidth-textWidth - 30) {
                         leadingPadding = pillWidth - textWidth - 30
                     }
-                   // print("--> leadingPadding - \(leadingPadding)")
+                    print("--> leadingPadding - \(leadingPadding)")
                 }
                 
                 timePills[row].leadingPadding = leadingPadding

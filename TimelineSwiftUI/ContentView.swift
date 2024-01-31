@@ -236,7 +236,7 @@ struct PillView: View {
     }
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .leading) {
             Rectangle()
                 .fill(pill.color ?? Color.blue).opacity(0.12)
                 .cornerRadius(8)
@@ -252,52 +252,101 @@ struct PillView: View {
                             pillGeometries[pill.id] = newFrame
                         }
                 })
-            
-        }
-        HStack(spacing: 0.0) {
-            Text((pill.body ?? ""))
-                .font(.system(size: 14.0, weight: .medium))
-                .foregroundColor(pill.color ?? Color.blue)
-                .padding(.vertical, 10.0)
-                .padding(.leading, padding)
-                .padding(.trailing, 10.0)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(width: widthOfPill()-30, alignment: alignmentC())
-                .opacity(alpha)
-                .onChange(of: pill.leadingPadding, perform: { newValue in
-                    withAnimation(.easeIn(duration: 0.3)) {
-                        self.padding = xPosition()
-                    }
-                })
-                .onChange(of: isScrolling, perform: { newValue in
-                    withAnimation(.easeIn(duration: 0.3)) {
-                        self.alpha = !isScrolling || isSingleWeekWidthPill ? 1.0 : 0.4
-                    }
-                })
-                //.animation(animationText())
+            HStack(spacing: 0.0) {
+                Text((pill.body ?? ""))
+                    .font(.system(size: 14.0, weight: .medium))
+                    .foregroundColor(pill.color ?? Color.blue)
+                    .padding(.vertical, 10.0)
+                    .padding(.leading, 10.0)
+                    .padding(.trailing, 10.0)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(width: widthOfText(), alignment: alignmentC())
+                    .opacity(alpha)
+    //                .onChange(of: pill.leadingPadding, perform: { newValue in
+    //                    withAnimation(.easeIn(duration: 0.3)) {
+    //                        self.padding = xPosition()
+    //                    }
+    //                })
+                    .onChange(of: isScrolling, perform: { newValue in
+                        withAnimation(.easeIn(duration: 0.3)) {
+                            self.alpha = !isScrolling || isSingleWeekWidthPill ? 1.0 : 0.4
+                        }
+                    })
+                    //.animation(animationText())
+                    
+                    //.background(Color.gray)
+                    .lineLimit(3)
                 
-               // .background(Color.gray)
-                .lineLimit(3)
-            
-            Image(systemName: "chevron.right")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 8, height: 14)
-                .padding(.trailing, 10.0)
-                .foregroundColor(pill.color ?? .gray)
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 8, height: 14)
+                    .padding(.trailing, 10.0)
+                    .foregroundColor(pill.color ?? .gray)
+            }
+            .padding(.leading, padding)
+            .padding(.trailing, 10.0) //dybamically set trailing space
+            .frame(width: widthOfPill(), alignment: .leading)
+            //.background(Color.green)
+            .onChange(of: pill.leadingPadding, perform: { newValue in
+                withAnimation(.easeIn(duration: 0.3)) {
+                    self.padding = xPosition()
+                }
+            })
         }
-        .frame(width: widthOfPill())
+//        HStack(spacing: 0.0) {
+//            Text((pill.body ?? ""))
+//                .font(.system(size: 14.0, weight: .medium))
+//                .foregroundColor(pill.color ?? Color.blue)
+//                .padding(.vertical, 10.0)
+//                .padding(.leading, 10.0)
+//                .padding(.trailing, 10.0)
+//                .fixedSize(horizontal: false, vertical: true)
+//                .frame(width: widthOfText(), alignment: alignmentC())
+//                .opacity(alpha)
+////                .onChange(of: pill.leadingPadding, perform: { newValue in
+////                    withAnimation(.easeIn(duration: 0.3)) {
+////                        self.padding = xPosition()
+////                    }
+////                })
+//                .onChange(of: isScrolling, perform: { newValue in
+//                    withAnimation(.easeIn(duration: 0.3)) {
+//                        self.alpha = !isScrolling || isSingleWeekWidthPill ? 1.0 : 0.4
+//                    }
+//                })
+//                //.animation(animationText())
+//
+//                .background(Color.gray)
+//                .lineLimit(3)
+//
+//            Image(systemName: "chevron.right")
+//                .resizable()
+//                .aspectRatio(contentMode: .fit)
+//                .frame(width: 8, height: 14)
+//                .padding(.trailing, 10.0)
+//                .foregroundColor(pill.color ?? .gray)
+//        }
+//        .padding(.leading, 100)
+//        .frame(width: widthOfPill())
+//        .background(Color.green)
+//        .onChange(of: pill.leadingPadding, perform: { newValue in
+//            withAnimation(.easeIn(duration: 0.3)) {
+//                self.padding = xPosition()
+//            }
+//        })
+        
         //.background(Color.green)
     }
     
-    func widthOfText() -> CGFloat {
+    func widthOfText() -> CGFloat? {
         if isSingleWeekWidthPill {
             return CGFloat(pill.duration ?? 0) * widthPerWeek - 30
         }
-        if pill.pillTextWidth ?? 0 > UIScreen.main.bounds.size.width - 40 {
-            return UIScreen.main.bounds.size.width - 40 - 30
-        }
-        return (pill.pillTextWidth ?? 0) + 30 //here 20 is lead, trail padding and 30 is arrow width
+        return nil
+//        if pill.pillTextWidth ?? 0 > UIScreen.main.bounds.size.width - 40 {
+//            return UIScreen.main.bounds.size.width - 40 - 30
+//        }
+//        return (pill.pillTextWidth ?? 0) + 30 //here 20 is lead, trail padding and 30 is arrow width
     }
     func alignmentC() -> Alignment {
         if pill.startWeek == pill.endWeek {
@@ -309,9 +358,9 @@ struct PillView: View {
 //        print("--> currentWeek - \(currentWeek)")
 
         if pill.endWeek == Int(currentWeek+1) || pill.endWeek == Int(currentWeek-1) || pill.endWeek == Int(currentWeek) {
-            return .trailing
+            return .leading
         }
-        return .leading
+        return .trailing
     }
     func xPosition() -> CGFloat {
 //        if pill.startWeek == pill.endWeek {
