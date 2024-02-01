@@ -140,7 +140,7 @@ class TimelineViewModel: ObservableObject {
         if pill.startWeek == pill.endWeek {
             return CGFloat(pill.duration ?? 0) * (screenWidth/2)-30
         }
-        if pill.startWeek == Int(currentWeek) || pill.endWeek == Int(currentWeek) {
+        if pill.startWeek == Int(currentWeek) || pill.endWeek == Int(currentWeek) || pill.endWeek == Int(currentWeek-1) || pill.startWeek == Int(currentWeek+1) {
             return screenWidth * 0.75 - 30
         }
         return screenWidth - 30
@@ -201,12 +201,6 @@ extension String {
         return size.width
     }
 }
-
-//enum Alignment {
-//    case leading
-//    case center
-//    case trailing
-//}
 
 extension Alignment {
     func toTextAlignment() -> TextAlignment {
