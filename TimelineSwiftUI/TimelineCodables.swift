@@ -38,10 +38,12 @@ class TimelinePill: Codable, Identifiable, ObservableObject {
 
      var priority: Int?
      var color: Color?
-        var pillTextWidth: CGFloat?
-     @Published var textAligment: Alignment = .leading
+    @Published  var pillTextWidth: CGFloat?
+    @Published var textAligment: Alignment = .center
+    @Published var textContentAligment: TextAlignment = .center
     @Published var leadingPadding: CGFloat = 10
-    
+   // @Published var trailingPadding: CGFloat = 10
+
     enum CodingKeys: String, CodingKey {
         case categoryId = "Category"
         case body = "Body"
