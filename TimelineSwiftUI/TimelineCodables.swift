@@ -28,21 +28,20 @@ class Timeline: Codable, ObservableObject {
 
 class TimelinePill: Codable, Identifiable, ObservableObject {
     let id = UUID()
-     var categoryId: String?
-     var body: String?
-     var startWeek: Int?
-     var endWeek: Int?
+    var categoryId: String?
+    var body: String?
+    var startWeek: Int?
+    var endWeek: Int?
     var duration: Int? {
         (endWeek ?? 1) - (startWeek ?? 1) + 1
     }
+    var priority: Int?
+    var color: Color?
 
-     var priority: Int?
-     var color: Color?
     @Published  var pillTextWidth: CGFloat?
     @Published var textAligment: Alignment = .center
     @Published var textContentAligment: TextAlignment = .center
     @Published var leadingPadding: CGFloat = 10
-   // @Published var trailingPadding: CGFloat = 10
 
     enum CodingKeys: String, CodingKey {
         case categoryId = "Category"

@@ -17,20 +17,6 @@ struct TimelineView: View {
     let totalCount = 43
     @State private var isScrolling = false
 
-    fileprivate func updateTextAlignment() {
-        let index = Int(currentIndex)+1
-        let pills = viewModel.timePills.filter { pill in
-            // Assuming that the start and end week should fall within the specified range
-            return (index >= pill.startWeek ?? 0 && index <= pill.endWeek ?? 0) ||
-            (index - 1) == pill.startWeek ?? 0 ||
-            (index - 1) == pill.endWeek ?? 0 ||
-            (index + 1) == pill.startWeek ?? 0 ||
-            (index + 1) == pill.endWeek ?? 0
-        }
-        // viewModel.updateTextAlignmentMetaData(pills, currentIndex: index)
-        viewModel.updateOffsetValue(pills, currentIndex: index, weekWidth: weekWidth(UIScreen.main.bounds.size.width))
-    }
-    
     var body: some View {
         NavigationView {
             LegacyScrollViewReader { proxy in
@@ -61,7 +47,7 @@ struct TimelineView: View {
                                             .foregroundColor(week == Int(currentIndex) ? Color(bleen) : bombayLB)
                                             .onTapGesture {
                                                 scrollToIndexWith(scrollView: proxy.scrollView, index: CGFloat(week), animated: true)
-                                                updateTextAlignment()
+                                                viewModel.filterVisibleTextPillsAndUpdateMetaData(currentIndex: currentIndex)
                                                 //Should find a better way to update the state of isscrolling
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                                     isScrolling = false
@@ -100,7 +86,7 @@ struct TimelineView: View {
                                 scrollToIndexWith(scrollView: proxy.scrollView,
                                                   index: CGFloat(viewModel.currentWeek),
                                                   animated: false)
-                                updateTextAlignment()
+                                viewModel.filterVisibleTextPillsAndUpdateMetaData(currentIndex: currentIndex)
                                 isScrolling = false
                             }
                         }
@@ -108,10 +94,8 @@ struct TimelineView: View {
                     .onEndDragging { scrollView in
                         snapWith(scrollView: scrollView)
                         isScrolling = false
-                       // updateTextAlignment()
                     }.onEndDecelerating { scrollView in
                         snapWith(scrollView: scrollView)
-                        //updateTextAlignment()
                         isScrolling = false
                     }
                     .onScroll { scrollView in
@@ -186,8 +170,7 @@ struct TimelineView: View {
             currentIndex = index
         }
         
-        updateTextAlignment()
-
+        viewModel.filterVisibleTextPillsAndUpdateMetaData(currentIndex: currentIndex)
         UIView.animate(withDuration: 0.3, animations: {
             scrollView.contentOffset = CGPoint(x: newOffset, y: 0)
         })
@@ -229,9 +212,9 @@ struct PillView: View {
 
     @State var widthPerWeek: CGFloat
     @State private var pillGeometries: [UUID: CGRect] = [:]
-    @State var padding: CGFloat = 10
+    @State var stackLeadingPadding: CGFloat = 10
     @State private var alpha: Double = 1.0
-    @State var widthOfText: CGFloat?
+   // @State var textWidth: CGFloat?
     
     var isSingleWeekWidthPill: Bool {
         pill.startWeek == pill.endWeek
@@ -262,21 +245,23 @@ struct PillView: View {
                     .padding(.leading, 3.0)
                     .padding(.trailing, 10.0)
                     .fixedSize(horizontal: false, vertical: true)
-                    .frame(width: widthOfText,
+//                    .frame(width: textWidth,
+//                           alignment: textViewAlignment())
+                    .frame(width: widthOfText(),
                            alignment: textViewAlignment())
                     .multilineTextAlignment(textContentAlignment())
                     .opacity(alpha)
-                    .onChange(of: pill.pillTextWidth, perform: { newValue in
-                        withAnimation(.easeIn(duration: 0.3)) {
-                            self.widthOfText = widthOfTextOld()
-                        }
-                    })
+//                    .onChange(of: pill.pillTextWidth, perform: { newValue in //TBD: review if this is required
+//                        withAnimation(.easeIn(duration: 0.01)) {
+//                            self.textWidth = widthOfTextOld()
+//                        }
+//                    })
                     .onChange(of: isScrolling, perform: { newValue in
                         withAnimation(.easeIn(duration: 0.3)) {
                             self.alpha = !isScrolling || isSingleWeekWidthPill ? 1.0 : 0.4
                         }
                     })
-                   // .background(Color.gray)
+                    //.background(Color.gray)
                     .lineLimit(3)
                 
                 Image(systemName: "chevron.right")
@@ -286,14 +271,13 @@ struct PillView: View {
                     .padding(.trailing, 10.0)
                     .foregroundColor(pill.color ?? .gray)
             }
-            .padding(.leading, padding)
-            .padding(.trailing, 10.0) //dybamically set trailing space
+            .padding(.leading, stackLeadingPadding)
+            .padding(.trailing, 10.0)
             .frame(width: widthOfPill(), alignment: .leading)
-           // .background(Color.green)
+            //.background(Color.green)
             .onChange(of: pill.leadingPadding, perform: { newValue in
-                print("--> On change of leading padding")
                 withAnimation(.easeIn(duration: 0.3)) {
-                    self.padding = leadingPadding()
+                    self.stackLeadingPadding = leadingPadding()
                 }
             })
         }
@@ -313,75 +297,20 @@ struct PillView: View {
         return pill.textContentAligment
     }
     
-//    func widthOfText(pill: TimelinePill, currentWeek: Int) -> CGFloat {
-//        let screenWidth = UIScreen.main.bounds.size.width
-//
-//        if pill.startWeek == pill.endWeek {
-//            return CGFloat(pill.duration ?? 0) * (screenWidth/2)
-//        }
-//        if pill.startWeek == Int(currentWeek) || pill.endWeek == Int(currentWeek) {
-//            return screenWidth * 0.75
-//        }
-//
-////        if pill.startWeek == Int(currentWeek)+1 || pill.endWeek == Int(currentWeek)-1 {
-////            return screenWidth * 0.25 - 30
-////        }
-//
-//        if ((pill.pillTextWidth ?? 0) + 20 + 30) < screenWidth {
-//            return (pill.pillTextWidth ?? 0) + 20 + 30
-//        }
-//        return UIScreen.main.bounds.size.width - 30
-//    }
-//
-    func widthOfTextOld() -> CGFloat? {
+    func widthOfText() -> CGFloat? {
         if isSingleWeekWidthPill {
             return CGFloat(pill.duration ?? 0) * widthPerWeek - 30
         }
         return pill.pillTextWidth
-//        if pill.pillTextWidth ?? 0 > UIScreen.main.bounds.size.width - 40 {
-//            return UIScreen.main.bounds.size.width - 40 - 30
-//        }
-//        return (pill.pillTextWidth ?? 0) + 30 //here 20 is lead, trail padding and 30 is arrow width
     }
-    
-//    func textViewAlignment() -> Alignment {
-//        if pill.startWeek == pill.endWeek {
-//            return .leading
-//        }
-//        if pill.endWeek == Int(currentWeek-1) || pill.endWeek == Int(currentWeek) {
-//            return .trailing
-//        }
-//        if pill.startWeek == Int(currentWeek) || pill.startWeek == Int(currentWeek+1) {
-//            return .leading
-//        }
-//        return .center
-//    }
-//
-//    func textContentAlignment() -> TextAlignment {
-//        if pill.startWeek == pill.endWeek {
-//            return .leading
-//        }
-//        if pill.endWeek == Int(currentWeek-1) || pill.endWeek == Int(currentWeek) {
-//            return .trailing
-//        }
-//        if pill.startWeek == Int(currentWeek) || pill.startWeek == Int(currentWeek+1) {
-//            return .leading
-//        }
-//        return .center
-//    }
+
     func leadingPadding() -> CGFloat {
         if pill.startWeek == pill.endWeek {
             return 10.0
         }
         return pill.leadingPadding
     }
-    
-    func animationText() -> Animation? {
-        if pill.startWeek == pill.endWeek {
-            return nil
-        }
-        return .easeIn(duration: 0.3)
-    }
+
     func widthOfPill() -> CGFloat {
         CGFloat(pill.duration ?? 0) * widthPerWeek
     }

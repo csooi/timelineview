@@ -14,77 +14,43 @@ class TimelineViewModel: ObservableObject {
         calculateRows(for: timePills, withPriority: categoryMetaData)
     }
 
-    func updateTextAlignmentMetaData(_ pills: [TimelinePill], currentIndex: Int) {
-        for pill in pills {
-            if let row = timePills.firstIndex(where: {$0.id == pill.id}) {
-                var alignment: Alignment = .center
-                if pill.startWeek == pill.endWeek {
-                    print("-->\(row) alignment - center")
-                    alignment = .leading
-                }
-                if (pill.endWeek ?? 1) - currentIndex > currentIndex - (pill.startWeek ?? 1) {
-                    print("-->\(row) alignment - trailing")
-                    alignment = .trailing
-                }
-                timePills[row].textAligment = alignment
-            }
+    func filterVisibleTextPillsAndUpdateMetaData(currentIndex: CGFloat) {
+        let index = Int(currentIndex)+1
+        let pills = timePills.filter { pill in
+            // Assuming that the start and end week should fall within the specified range
+            return (index >= pill.startWeek ?? 0 && index <= pill.endWeek ?? 0) ||
+            (index - 1) == pill.startWeek ?? 0 ||
+            (index - 1) == pill.endWeek ?? 0 ||
+            (index + 1) == pill.startWeek ?? 0 ||
+            (index + 1) == pill.endWeek ?? 0
         }
+        updateTextPillMetaDataOnScrollStops(pills, currentIndex: index)
     }
-
-    func updateOffsetValue(_ pills: [TimelinePill], currentIndex: Int, weekWidth: CGFloat)  {
+    
+    fileprivate func updateTextPillMetaDataOnScrollStops(_ pills: [TimelinePill], currentIndex: Int)  {
         for pill in pills {
             if let row = timePills.firstIndex(where: {$0.id == pill.id}) {
                 var leadingPadding = 0.0
-                var textWidth = widthOfText(pill: pill, currentWeek: currentIndex)
-
+                let weekWidth = UIScreen.main.bounds.size.width/2 //TBD: make it genric
+                let textWidth = widthOfText(pill: pill, currentWeek: currentIndex)
                 if pill.startWeek == pill.endWeek {
                     leadingPadding = 10.0
                 } else {
-
                     let startWeek = pill.startWeek ?? 1
-                    let endWeek = pill.endWeek ?? 1
-                    print("--> Title - \(pill.body)")
-                    print("--> start week - \(pill.startWeek)")
-                    print("--> end week - \(pill.endWeek)")
-                    print("--> current week - \(currentIndex)")
-                    
-                    let pillWidth = (CGFloat(pill.duration ?? 0) * weekWidth)
-                    print("--> pillWidth - \(pillWidth)")
-                    print("--> textWidth - \(textWidth)")
-                    print("--> weekWidth - \(weekWidth)")
-
+                    let pillWidth = (CGFloat(pill.duration ?? 0) * weekWidth) //TBD: make it generic
                     leadingPadding = (Double(((currentIndex) - (startWeek))) * weekWidth) - (weekWidth/2)
-                    
-//                    if startWeek == currentIndex {
-//                        textWidth = UIScreen.main.bounds.size.width * 0.75
-//                    } else if endWeek == currentIndex {
-//                        textWidth = UIScreen.main.bounds.size.width * 0.25
-//                    }
-                    
-//                    if textWidth < weekWidth {
-//                        leadingPadding = leadingPadding + (weekWidth - textWidth)/2
-//                    } else if textWidth > weekWidth {
-//                        leadingPadding = leadingPadding - (textWidth - weekWidth)/2
-//                    }
-                   // leadingPadding = leadingPadding - (weekWidth - textWidth)/2
-                   // leadingPadding = leadingPadding - 30
-                    //adjust trailing space of 
-//                    //handle the edge cases
+                    //handle the edge cases
                     if leadingPadding < 10 {
                         leadingPadding = 10
                     } else if leadingPadding > (pillWidth-textWidth-30) {
                         leadingPadding = pillWidth - textWidth - 30
                     }
-                    print("--> leadingPadding - \(leadingPadding)")
                 }
                 
                 timePills[row].leadingPadding = leadingPadding
                 timePills[row].pillTextWidth = textWidth
                 timePills[row].textContentAligment = textContentAlignment(pill: pill, currentWeek: currentIndex)
                 timePills[row].textAligment = textViewAlignment(pill: pill, currentWeek: currentIndex)
-                let trailingPadding = trailingPadding(pill: pill, currentWeek: currentIndex)
-               // print("--> trailingPadding - \(trailingPadding)")
-               // timePills[row].trailingPadding = trailingPadding
             }
         }
     }
@@ -145,20 +111,7 @@ class TimelineViewModel: ObservableObject {
         }
         return screenWidth - 30
     }
-    
-    func trailingPadding(pill: TimelinePill, currentWeek: Int) -> CGFloat {
-        if pill.startWeek == pill.endWeek {
-            return 10.0
-        }
-        let widthOfText = widthOfText(pill: pill, currentWeek: currentWeek)
-        let widthOfPill = CGFloat(pill.duration ?? 0) * (UIScreen.main.bounds.size.width/2) //should make a common code to get week width
-        var trailingPadding = widthOfPill - pill.leadingPadding - widthOfText
-        if trailingPadding < 0 {
-            trailingPadding = 10.0
-        }
-        return trailingPadding
-    }
-    
+
     fileprivate func alignText(_ pill: TimelinePill, _ currentWeek: Int) -> Alignment {
         if pill.startWeek == pill.endWeek {
             return .leading
