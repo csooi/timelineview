@@ -7,6 +7,9 @@ struct TimelineCalendarView: View {
     @State var currentMonth: Int = 0
     
     let calendar = Calendar(identifier: .gregorian)
+    
+    var startMonth: Int = -3
+    var endMonth: Int = 8
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,14 +31,14 @@ struct TimelineCalendarView: View {
                 
             }
             Spacer()
-            Button(action: { currentMonth -= 1 }) {
-                Image(systemName: "chevron.left")
-                    .font(.title2)
-            }
-            Button(action: { currentMonth += 1 }) {
-                Image(systemName: "chevron.right")
-                    .font(.title2)
-            }
+//            Button(action: { currentMonth -= 1 }) {
+//                Image(systemName: "chevron.left")
+//                    .font(.title2)
+//            }
+//            Button(action: { currentMonth += 1 }) {
+//                Image(systemName: "chevron.right")
+//                    .font(.title2)
+//            }
         }
         .frame(height: 60.0)
         .padding(.horizontal, 16.0)
@@ -58,12 +61,23 @@ struct TimelineCalendarView: View {
         let columns = Array(repeating: GridItem(.flexible(),
                                                 spacing: 0),
                             count: 7)
-        return LazyVGrid(columns: columns, spacing: 0) {
-            ForEach(extractDates()) { value in
-                DayView(value: value)
-                    .frame(height: 110)
+        
+        return TabView(selection: $currentMonth) {
+            ForEach(startMonth...endMonth, id: \.self) { index in
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(extractDates(fromMonth: index)) { value in
+                        DayView(value: value)
+                            .frame(height: 110)
+                    }
+                }
+                .tag(index)
             }
         }
+        .onChange(of: currentMonth) { newIndex in
+            // This block gets called whenever currentIndex changes
+            print("Current index: \(newIndex)")
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
 
     @ViewBuilder
@@ -89,10 +103,10 @@ struct TimelineCalendarView: View {
         
     }
 
-    func extractDates() -> [DayModel] {
+    func extractDates(fromMonth: Int) -> [DayModel] {
         let extractor = CalendarDayExtractor(calendar: calendar,
                                              referenceDate: duedate)
-        switch extractor.extractDates(from: getCurrentMonth()) {
+        switch extractor.extractDates(from: getCurrentMonth(month: fromMonth)) {
         case .success(let dates):
             return dates
         case .failure(_):
@@ -100,16 +114,16 @@ struct TimelineCalendarView: View {
         }
     }
 
-    func getCurrentMonth() -> Date {
+    func getCurrentMonth(month: Int) -> Date {
         calendar.date(byAdding: .month,
-                      value: currentMonth,
+                      value: month,
                       to: Date()) ?? Date()
     }
 
     func getMonthString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"
-        return formatter.string(from: getCurrentMonth())
+        return formatter.string(from: getCurrentMonth(month: currentMonth))
     }
 }
 
