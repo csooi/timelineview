@@ -55,17 +55,19 @@ struct TimelineCalendarView: View {
     }
 
     var calendarGridView: some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing:0), count: 7)
+        let columns = Array(repeating: GridItem(.flexible(),
+                                                spacing: 0),
+                            count: 7)
         return LazyVGrid(columns: columns, spacing: 0) {
             ForEach(extractDates()) { value in
-                CardView(value: value)
+                DayView(value: value)
                     .frame(height: 110)
             }
         }
     }
 
     @ViewBuilder
-    func CardView(value: DateValue) -> some View {
+    func DayView(value: DayModel) -> some View {
         ZStack(content: {
             VStack(spacing: 3.0) {
                 Text("\(value.day)")
@@ -87,19 +89,21 @@ struct TimelineCalendarView: View {
         
     }
 
-    func extractDates() -> [DateValue] {
+    func extractDates() -> [DayModel] {
         let extractor = CalendarDayExtractor(calendar: calendar,
                                              referenceDate: duedate)
         switch extractor.extractDates(from: getCurrentMonth()) {
         case .success(let dates):
             return dates
-        case .failure(let error):
+        case .failure(_):
             return []
         }
     }
 
     func getCurrentMonth() -> Date {
-        calendar.date(byAdding: .month, value: currentMonth, to: Date()) ?? Date()
+        calendar.date(byAdding: .month,
+                      value: currentMonth,
+                      to: Date()) ?? Date()
     }
 
     func getMonthString() -> String {
@@ -109,7 +113,7 @@ struct TimelineCalendarView: View {
     }
 }
 
-struct DateValue: Identifiable {
+struct DayModel: Identifiable {
     let id = UUID()
     let day: Int
     let date: Date

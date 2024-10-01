@@ -17,7 +17,7 @@ struct CalendarDayExtractor {
         self.referenceWeekday = calendar.component(.weekday, from: self.referenceDate)
     }
 
-    func extractDates(from date: Date = Date()) -> Result<[DateValue], DateExtractorError> {
+    func extractDates(from date: Date = Date()) -> Result<[DayModel], DateExtractorError> {
         guard let currentMonthDate = getCurrentMonthDate(from: date) else {
             return .failure(.invalidDate)
         }
@@ -26,7 +26,8 @@ struct CalendarDayExtractor {
             return .failure(.dateCreationFailed)
         }
 
-        return .success(generateDatesForGrid(startingFrom: firstDayOfGrid, currentMonthDate: currentMonthDate))
+        return .success(generateDatesForGrid(startingFrom: firstDayOfGrid,
+                                             currentMonthDate: currentMonthDate))
     }
 
     private func getCurrentMonthDate(from date: Date) -> Date? {
@@ -41,7 +42,7 @@ struct CalendarDayExtractor {
         return calendar.date(byAdding: .day, value: -daysToSubtract, to: firstOfMonth)
     }
 
-    private func generateDatesForGrid(startingFrom startDate: Date, currentMonthDate: Date) -> [DateValue] {
+    private func generateDatesForGrid(startingFrom startDate: Date, currentMonthDate: Date) -> [DayModel] {
         let totalDays = numberOfWeeks * 7
         return (0..<totalDays).compactMap { day in
             guard let currentDate = calendar.date(byAdding: .day, value: day, to: startDate) else {
@@ -51,8 +52,8 @@ struct CalendarDayExtractor {
         }
     }
 
-    private func createDateValue(for date: Date, currentMonthDate: Date) -> DateValue {
-        DateValue(
+    private func createDateValue(for date: Date, currentMonthDate: Date) -> DayModel {
+        DayModel(
             day: calendar.component(.day, from: date),
             date: date,
             isCurrentMonth: calendar.isDate(date, equalTo: currentMonthDate, toGranularity: .month),
