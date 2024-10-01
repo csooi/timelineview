@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct TimelineSwiftUIApp: App {
+    
+    @State private var selectedDate = Date()
+    
     var body: some Scene {
         WindowGroup {
-            TimelineView(viewModel: TimelineViewModel())
+//            TimelineView(viewModel: TimelineViewModel())
+            TimelineCalendarView(currentDate: $selectedDate)
         }
     }
 }
