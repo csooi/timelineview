@@ -10,18 +10,25 @@ struct TimelineCalendarView: View {
     
     var startMonth: Int = -3
     var endMonth: Int = 8
+    
+    @State var canScroll = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            headerView
-            daysHeaderView
-            calendarGridView
-            Spacer()
+        PreventableScrollView (canScroll: $canScroll) {
+            VStack(spacing: 0) {
+                headerView
+                daysHeaderView
+                calendarGridView
+                Spacer()
+            }
+            //        .padding(.horizontal)
+            //        .navigationBarTitleDisplayMode(.inline)
+            
+        }.background(Color.white)
+        .onAppear {
+            detectScrollView()
         }
-//        .padding(.horizontal)
-//        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.white)
-    }
+}
 
     var headerView: some View {
         HStack(spacing: 20) {
@@ -78,6 +85,7 @@ struct TimelineCalendarView: View {
             print("Current index: \(newIndex)")
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .frame(height: 660)
     }
 
     @ViewBuilder
@@ -124,6 +132,10 @@ struct TimelineCalendarView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"
         return formatter.string(from: getCurrentMonth(month: currentMonth))
+    }
+    
+    func detectScrollView() {
+        canScroll = (UIScreen.main.bounds.height) <= 812
     }
 }
 
