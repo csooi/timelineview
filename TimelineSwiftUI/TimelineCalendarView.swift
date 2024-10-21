@@ -10,19 +10,39 @@ struct TimelineCalendarView: View {
     
     var startMonth: Int = -3
     var endMonth: Int = 8
+    
+    @State var canScroll = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            headerView
-            daysHeaderView
-            calendarGridView
-            Spacer()
+        TabView{
+            NavigationView {
+                GeometryReader { calenderProxy in
+                    ScrollViewReader { scrollViewProxy in
+                        PreventableScrollView (canScroll: $canScroll) {
+                            VStack(spacing: 0) {
+                                headerView.id(0)
+                                daysHeaderView
+                                calendarGridView(scrollViewProxy: scrollViewProxy)
+                                Spacer()
+                            }.onAppear {
+                                detectScrollView(calenderProxy: calenderProxy)
+                            }
+                        }
+                        .background(Color.white)
+                        
+                        .navigationTitle("Timeline")
+                        .navigationBarTitleDisplayMode(.inline)
+                        
+                    }
+                }
+            }.tabItem {
+                Text("Today")
+                Image(systemName: "circle.fill")
+                    .renderingMode(.template)
+            }
         }
-//        .padding(.horizontal)
-//        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.white)
     }
-
+    
     var headerView: some View {
         HStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 10) {
@@ -40,7 +60,7 @@ struct TimelineCalendarView: View {
 //                    .font(.title2)
 //            }
         }
-        .frame(height: 60.0)
+        .frame(height: TimelineConstants.CalenderView.headerHeight)
         .padding(.horizontal, 16.0)
     }
 
@@ -54,10 +74,10 @@ struct TimelineCalendarView: View {
                     .frame(maxWidth: .infinity)
             }
         }
-        .padding(.vertical, 10)
+        .frame(height: TimelineConstants.CalenderView.daysRowHeight)
     }
 
-    var calendarGridView: some View {
+    func calendarGridView(scrollViewProxy: ScrollViewProxy) -> some View {
         let columns = Array(repeating: GridItem(.flexible(),
                                                 spacing: 0),
                             count: 7)
@@ -67,7 +87,7 @@ struct TimelineCalendarView: View {
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(extractDates(fromMonth: index)) { value in
                         DayView(value: value)
-                            .frame(height: 110)
+                            .frame(height: TimelineConstants.CalenderView.dayViewHeight)
                     }
                 }
                 .tag(index)
@@ -76,8 +96,12 @@ struct TimelineCalendarView: View {
         .onChange(of: currentMonth) { newIndex in
             // This block gets called whenever currentIndex changes
             print("Current index: \(newIndex)")
+//            withAnimation {
+//                scrollViewProxy.scrollTo(0)
+//            }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .frame(height: TimelineConstants.CalenderView.totalCalenderHeight)
     }
 
     @ViewBuilder
@@ -125,6 +149,15 @@ struct TimelineCalendarView: View {
         formatter.dateFormat = "MMMM"
         return formatter.string(from: getCurrentMonth(month: currentMonth))
     }
+    
+    func detectScrollView(calenderProxy: GeometryProxy) {
+        let availableFrameHeight = calenderProxy.size.height
+        let contentHeight = TimelineConstants.CalenderView.headerHeight +
+        TimelineConstants.CalenderView.daysRowHeight +
+        TimelineConstants.CalenderView.totalCalenderHeight
+        
+        canScroll =  contentHeight > availableFrameHeight
+    }
 }
 
 struct DayModel: Identifiable {
@@ -141,5 +174,14 @@ struct CustomDatePicker_Previews: PreviewProvider {
         NavigationView {
             TimelineCalendarView(currentDate: .constant(Date()))
         }
+    }
+}
+
+enum TimelineConstants {
+    enum CalenderView {
+        static let headerHeight = 60.0
+        static let daysRowHeight = 26.0
+        static let totalCalenderHeight = 660.0
+        static let dayViewHeight = 110.0
     }
 }

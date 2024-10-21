@@ -19,6 +19,7 @@
 		FF3BA96B2B0F42820038E76D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3BA96A2B0F42820038E76D /* ContentView.swift */; };
 		FF3BA96D2B0F42830038E76D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF3BA96C2B0F42830038E76D /* Assets.xcassets */; };
 		FF3BA9702B0F42830038E76D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF3BA96F2B0F42830038E76D /* Preview Assets.xcassets */; };
+		FFED5E972CAFA1C100134001 /* PreventableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFED5E962CAFA1C100134001 /* PreventableScrollView.swift */; };
 		FFEE80FC2CA548D500A2C867 /* TimelineCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEE80FB2CA548D500A2C867 /* TimelineCalendarView.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		FF3BA96A2B0F42820038E76D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FF3BA96C2B0F42830038E76D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FF3BA96F2B0F42830038E76D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FFED5E962CAFA1C100134001 /* PreventableScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreventableScrollView.swift; sourceTree = "<group>"; };
 		FFEE80FB2CA548D500A2C867 /* TimelineCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineCalendarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,6 +77,7 @@
 				7F80521E2B15C12D00EA1A1F /* TimelineHelper.swift */,
 				FF3BA9682B0F42820038E76D /* TimelineSwiftUIApp.swift */,
 				FF1FE7E92B183ABB0060523D /* TimelineViewModel.swift */,
+				FFED5E962CAFA1C100134001 /* PreventableScrollView.swift */,
 				FF244B362B22269C00F51591 /* UIExtensions.swift */,
 				FF3BA96A2B0F42820038E76D /* ContentView.swift */,
 				FFEE80FB2CA548D500A2C867 /* TimelineCalendarView.swift */,
@@ -178,6 +181,7 @@
 				7F8052212B15C12D00EA1A1F /* TimelineHelper.swift in Sources */,
 				FF244B372B22269C00F51591 /* UIExtensions.swift in Sources */,
 				FF3BA9692B0F42820038E76D /* TimelineSwiftUIApp.swift in Sources */,
+				FFED5E972CAFA1C100134001 /* PreventableScrollView.swift in Sources */,
 				FF1FE7EA2B183ABB0060523D /* TimelineViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
