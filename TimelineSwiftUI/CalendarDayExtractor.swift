@@ -7,7 +7,7 @@ enum DateExtractorError: Error {
 
 struct CalendarDayExtractor {
     private let calendar: Calendar
-    private let numberOfWeeks = 6
+    static let numberOfWeeks = 6 // Fixed for every month
     private let referenceDate: Date
     private let referenceWeekday: Int
 
@@ -43,7 +43,7 @@ struct CalendarDayExtractor {
     }
 
     private func generateDatesForGrid(startingFrom startDate: Date, currentMonthDate: Date) -> [DayModel] {
-        let totalDays = numberOfWeeks * 7
+        let totalDays = CalendarDayExtractor.numberOfWeeks * 7
         return (0..<totalDays).compactMap { day in
             guard let currentDate = calendar.date(byAdding: .day, value: day, to: startDate) else {
                 return nil
