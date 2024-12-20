@@ -60,7 +60,7 @@ struct PlottingEvent: Identifiable {
 
 struct TimelineCalendarView: View {
     @Binding var currentDate: Date
-    @State var pregStartDay: Date = Date(timeIntervalSince1970: 1733349793)
+    @State var pregStartDay: Date = Date(timeIntervalSince1970: 1733249793)
     // Month update on arrow button clicks...
     @State var currentMonth: Int = 0
     
@@ -85,11 +85,12 @@ struct TimelineCalendarView: View {
                                 calendarGridView(scrollViewProxy: scrollViewProxy)
                                 Spacer()
                             }.onAppear {
-                                detectScrollView(calenderProxy: calenderProxy)
+                                
+                            detectScrollView(calenderProxy: calenderProxy)
+                                
                                 jsonEvents = loadEventsFromJSON()
                                 plottingEvents = generatePlottingEvents(events: jsonEvents,
                                                                         pregStartDay: pregStartDay)
-//                                print(plottingEvents as AnyObject)
                                 print(pregStartDay.remappedWeekday)
                             }
                         }
@@ -162,26 +163,76 @@ struct TimelineCalendarView: View {
     
     @ViewBuilder
     func DayView(value: DayModel) -> some View {
-        ZStack(content: {
+        // Calculate days since pregnancy start
+        let startOfPregStart = calendar.startOfDay(for: pregStartDay)
+        let startOfValue = calendar.startOfDay(for: value.date)
+        let daysSincePregStart = calendar.dateComponents([.day], from: startOfPregStart, to: startOfValue).day ?? -9999
+        
+        ZStack {
             VStack(spacing: 3.0) {
                 Text("\(value.day)")
-                    .font(Font.system(size: 14.0, weight: .medium))
-                    .foregroundColor(value.isCurrentMonth ? .primary : .gray)
+                    .font(.system(size: 14.0, weight: .medium))
+                    .foregroundColor(dayTextColor(date: value.date,
+                                                  isCurrentMonth: value.isCurrentMonth))
                     .frame(maxWidth: .infinity)
-                    .background(value.isToday ? Color.blue.opacity(0.5) : Color.white)
-                if (value.isNewWeek) {
-                    Text("\(value.day)")
-                        .font(Font.system(size: 10.0, weight: .medium))
+                    .background {
+                        if(value.isToday) {
+                            Circle()
+                                .fill(Color(red: 1, green: 0.5, blue: 0.62).opacity(0.12))
+                                .frame(width: 26.0, height: 26.0)
+                                
+                        }
+                    }
+                
+                // Check if this day marks a new pregnancy week
+                // Conditions:
+                // - daysSincePregStart >= 0 and < 42*7 (within 42 weeks range)
+                // - multiple of 7 days means a new pregnancy week starts
+                if daysSincePregStart >= 0 && daysSincePregStart < 42 * 7 && (daysSincePregStart % 7) == 0 {
+                    let weeks = daysSincePregStart / 7
+                    let weekText = (weeks == 0) ? "<1 wk" : "\(weeks) wk"
+                    
+                    Text(weekText)
+                        .font(.system(size: 10.0, weight: .medium))
                         .multilineTextAlignment(.center)
-                        .foregroundColor(Color(red: 0.69, green: 0.69, blue: 0.71))
+                        .foregroundColor(pregnancyWeekColor(for: value.date, pregStartDay: pregStartDay))
                 }
+                
                 Spacer()
             }
-        })
+        }
         .padding(.vertical, 8.0)
         .border(Color(red: 0.89, green: 0.89, blue: 0.91), width: 0.5)
-        
     }
+    
+    func dayTextColor(date: Date, isCurrentMonth: Bool) -> Color {
+        if Calendar.current.isDateInToday(date) {
+            return .pink
+        } else if isCurrentMonth {
+            return .black
+        } else {
+            return .gray
+        }
+    }
+    
+    func pregnancyWeekColor(for date: Date, pregStartDay: Date) -> Color {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let dayStart = calendar.startOfDay(for: date)
+        let pregStart = calendar.startOfDay(for: pregStartDay)
+        let defaultColor = Color(red: 0.69, green: 0.69, blue: 0.71)
+        guard let daysSincePregStartForDate = calendar.dateComponents([.day], from: pregStart, to: dayStart).day,
+              let daysSincePregStartForToday = calendar.dateComponents([.day], from: pregStart, to: today).day else {
+            return .black
+        }
+
+        let weekForDate = Int(floor(Double(daysSincePregStartForDate) / 7.0))
+        let weekForToday = Int(floor(Double(daysSincePregStartForToday) / 7.0))
+
+        return weekForDate == weekForToday ? .pink : defaultColor
+    }
+
+
 
     func extractDates(fromMonth: Int) -> [DayModel] {
         let extractor = CalendarDayExtractor(calendar: calendar,
@@ -214,7 +265,7 @@ struct TimelineCalendarView: View {
         
         canScroll =  contentHeight > availableFrameHeight
     }
-   
+    
     @ViewBuilder
     func eventsOverlayView(for monthIndex: Int) -> some View {
         GeometryReader { geometry in
@@ -223,42 +274,51 @@ struct TimelineCalendarView: View {
             let weeksPerMonth = CalendarDayExtractor.numberOfWeeks
             
             let monthDates = extractDates(fromMonth: monthIndex)
-            
-            if let firstDayOfGridForMonth = monthDates.first?.date {
-                // Now we know we have a valid date
-                let monthStartWeekRow = calculateWeekRow(for: firstDayOfGridForMonth, pregStartDay: pregStartDay)
-                let startingWeekOfMonth: Int = monthStartWeekRow
-                let endingWeekOfMonth: Int = monthStartWeekRow + weeksPerMonth
 
-                let eventBarHeight: CGFloat = 18.0
-                let eventVerticalSpacing: CGFloat = 2.0
-                let eventHorizontalPadding: CGFloat = 2.0
-                let topOffset: CGFloat = 50.0
-                
-                let startColumnIndex = pregStartDay.remappedWeekday
-                let moreTextX = CGFloat(startColumnIndex) * dayWidth + (dayWidth / 2)
-
-                ForEach(startingWeekOfMonth..<endingWeekOfMonth, id: \.self) { weekRow in
+            if monthDates.isEmpty {
+                EmptyView()
+            } else {
+                ForEach(0..<weeksPerMonth, id: \.self) { weekIndex in
+                    let weekStartIndex = weekIndex * 7
+//                    guard weekStartIndex < monthDates.count else { return }
+                    
+                    let firstDayOfWeek = monthDates[weekStartIndex].date
+                    let weekRow = calculateWeekRow(for: firstDayOfWeek, pregStartDay: pregStartDay)
+                    
                     let eventsForWeek = plottingEvents[weekRow] ?? []
                     
-                    let displayedEvents = eventsForWeek.prefix(2)
-                    let remainingCount = eventsForWeek.count - displayedEvents.count
+                    let startColumnIndex = pregStartDay.remappedWeekday
+                    let dayEventsForWeek = eventsForWeek.filter {
+                        $0.plotStartIndex <= startColumnIndex && $0.plotEndIndex >= startColumnIndex
+                    }
+                    
+                    let displayedEvents = eventsForWeek
+                        .filter { $0.plotRow < 2 }
+                        .sorted { $0.plotRow < $1.plotRow }
+                    
+                    let remainingCount = dayEventsForWeek.count - displayedEvents.count
+                    
+                    let relativeWeekIndex = CGFloat(weekIndex)
+                    let weekOffsetY: CGFloat = relativeWeekIndex * dayHeight
+                    let topOffset: CGFloat = 50.0
+                    let eventBarHeight: CGFloat = 18.0
+                    let eventVerticalSpacing: CGFloat = 2.0
+                    let eventHorizontalPadding: CGFloat = 2.0
+                    let moreTextX = CGFloat(startColumnIndex) * dayWidth + (dayWidth / 2)
                     
                     ForEach(displayedEvents) { plottingEvent in
                         let startIndex = plottingEvent.plotStartIndex
                         let endIndex = plottingEvent.plotEndIndex
                         let plotRow = plottingEvent.plotRow
-
-                        let relativeWeekIndex = CGFloat(weekRow - monthStartWeekRow)
-                        let weekOffsetY: CGFloat = relativeWeekIndex * dayHeight
+                        
                         let startX: CGFloat = CGFloat(startIndex) * dayWidth + eventHorizontalPadding
                         let endX: CGFloat = CGFloat(endIndex + 1) * dayWidth - eventHorizontalPadding
                         let eventWidth: CGFloat = endX - startX
                         let yOffsetForPlotRows = CGFloat(plotRow) * (eventBarHeight + eventVerticalSpacing)
-                        let eventY: CGFloat = weekOffsetY + topOffset + yOffsetForPlotRows + eventBarHeight/2
-
+                        let eventY: CGFloat = weekOffsetY + topOffset + yOffsetForPlotRows + eventBarHeight / 2
+                        
                         let eventColor = getEventColor(for: plottingEvent.event.category)
-
+                        
                         ZStack(alignment: .leading) {
                             Group {
                                 Color.white
@@ -267,7 +327,7 @@ struct TimelineCalendarView: View {
                             }
                             .cornerRadius(4)
                             .frame(width: eventWidth, height: eventBarHeight)
-
+                            
                             Text(plottingEvent.event.body)
                                 .font(.system(size: 10))
                                 .foregroundColor(eventColor)
@@ -275,26 +335,20 @@ struct TimelineCalendarView: View {
                                 .padding(.horizontal, 4)
                                 .frame(width: eventWidth - 8, alignment: .leading)
                         }
-                        .position(x: startX + eventWidth/2, y: eventY)
+                        .position(x: startX + eventWidth / 2, y: eventY)
                     }
-
+                    
                     if remainingCount > 0 {
                         let lastEventRow = min(eventsForWeek.count - 1, 1)
-                        let relativeWeekIndex = CGFloat(weekRow - monthStartWeekRow)
-                        let weekOffsetY: CGFloat = relativeWeekIndex * dayHeight
                         let yOffsetForPlotRows = CGFloat(lastEventRow) * (eventBarHeight + eventVerticalSpacing)
+                        let moreTextY: CGFloat = weekOffsetY + topOffset + yOffsetForPlotRows + eventBarHeight / 2 + 16
                         
-                        let moreTextY: CGFloat = weekOffsetY + topOffset + yOffsetForPlotRows + eventBarHeight/2 + 16
-
                         Text("\(remainingCount) more")
                             .font(.system(size: 10, weight: .medium))
                             .foregroundColor(Color(uiColor: UIColor(red: 0, green: 0.745, blue: 0.86, alpha: 1)))
                             .position(x: moreTextX, y: moreTextY)
                     }
                 }
-            } else {
-                // If we don't have a valid firstDayOfGridForMonth, just show nothing or an EmptyView
-                EmptyView()
             }
         }
     }
@@ -353,22 +407,25 @@ struct TimelineCalendarView: View {
                 plottingEventsDictionary[weekRow, default: []].append(plottingEvent)
             }
         }
-        
-        return plottingEventsDictionary
+        var adjustedDictionary: [Int: [PlottingEvent]] = [:]
+            for (key, value) in plottingEventsDictionary {
+                adjustedDictionary[key - 1] = value
+            }
+        return adjustedDictionary
     }
 
     // Helper function to calculate weekRow
     func calculateWeekRow(for date: Date, pregStartDay: Date) -> Int {
         let calendar = Calendar(identifier: .gregorian)
-        guard let weeksSincePregStart = calendar.dateComponents([.weekOfYear],
-                                                                from: pregStartDay,
-                                                                to: date).weekOfYear
-        else {
+        guard let dayCount = calendar.dateComponents([.day], from: pregStartDay, to: date).day else {
             return 0
         }
-//        print("weeksSincePregStart:\(weeksSincePregStart) - date: \(date), pregStartDay: \(pregStartDay)")
-        return weeksSincePregStart
+
+        let floatWeeks = Double(dayCount) / 7.0
+        let weekRow = Int(floor(floatWeeks))
+        return weekRow
     }
+
 
     // Helper function to calculate plot indices
     func calculatePlotIndices(
@@ -419,19 +476,19 @@ struct TimelineCalendarView: View {
         while true {
             let rowEvents = eventsByRow[row] ?? []
             
-            // Check if the new event overlaps with any event in the current row
-            let overlaps = rowEvents.contains(where: { existing in
-                let existingStart = existing.plotStartIndex
-                let existingEnd = existing.plotEndIndex
-                // Intervals overlap if they share any day
-                // Non-overlap scenario: existingEnd < plotStartIndex or existingStart > plotEndIndex
-                return !(existingEnd < plotStartIndex || existingStart > plotEndIndex)
-            })
+            // Check if the row is completely free
+            let isRowFree = rowEvents.allSatisfy { existing in
+                // No overlap means either:
+                // 1. New event entirely before existing event
+                // 2. New event entirely after existing event
+                plotEndIndex < existing.plotStartIndex || 
+                plotStartIndex > existing.plotEndIndex
+            }
             
-            if !overlaps {
-                // Found a row with no overlap, return it
+            if isRowFree {
                 return row
             }
+            
             // Otherwise, try next row
             row += 1
         }
@@ -481,6 +538,7 @@ extension Date {
     var remappedWeekday: Int {
         let calendar = Calendar.current
         let weekday = calendar.component(.weekday, from: self)
-        return (weekday + 5) % 7 + 1
+        // Shift so that Monday=0, Tuesday=1, ..., Sunday=6
+        return (weekday + 5) % 7
     }
 }

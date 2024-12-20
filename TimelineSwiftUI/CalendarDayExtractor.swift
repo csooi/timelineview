@@ -6,16 +6,20 @@ enum DateExtractorError: Error {
 }
 
 struct CalendarDayExtractor {
-    private let calendar: Calendar
-    static let numberOfWeeks = 6 // Fixed for every month
-    private let referenceDate: Date
-    private let referenceWeekday: Int
+    private var calendar: Calendar
+        static let numberOfWeeks = 6
+        private let referenceDate: Date
+        private let referenceWeekday: Int
 
-    init(calendar: Calendar = .current, referenceDate: Date = Date()) {
-        self.calendar = calendar
-        self.referenceDate = calendar.startOfDay(for: referenceDate)
-        self.referenceWeekday = calendar.component(.weekday, from: self.referenceDate)
-    }
+        init(calendar: Calendar = .current, referenceDate: Date = Date()) {
+            var modifiedCalendar = calendar
+            // Set Monday as the first day of the week
+            modifiedCalendar.firstWeekday = 2
+            self.calendar = modifiedCalendar
+            
+            self.referenceDate = modifiedCalendar.startOfDay(for: referenceDate)
+            self.referenceWeekday = modifiedCalendar.component(.weekday, from: self.referenceDate)
+        }
 
     func extractDates(from date: Date = Date()) -> Result<[DayModel], DateExtractorError> {
         guard let currentMonthDate = getCurrentMonthDate(from: date) else {
